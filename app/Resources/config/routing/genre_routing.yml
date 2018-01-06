@@ -1,0 +1,11 @@
+worth_reading_genres:
+  path: /
+  defaults: { _controller: AppBundle:Genre:index }
+
+worth_reading_genres_new:
+  path: /new
+  defaults: { _controller: AppBundle:Genre:new }
+
+worth_reading_genres_show:
+  path: /{id}
+  defaults: { _controller: AppBundle:Genre:show }

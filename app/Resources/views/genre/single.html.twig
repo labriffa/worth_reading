@@ -1,0 +1,16 @@
+{% extends '::base.html.twig' %}
+
+{% block content %}
+
+    <h1>{{ genre.name }}</h1>
+
+    {% if books %}
+
+        {% include '::book-grid.html.twig' with { 'books': books } %}
+
+    {% else %}
+
+        <p>There are currently no books</p>
+
+    {% endif %}
+{% endblock %}

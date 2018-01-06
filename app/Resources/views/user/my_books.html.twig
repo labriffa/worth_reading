@@ -1,0 +1,33 @@
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-bar-rating/1.2.2/themes/fontawesome-stars.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-bar-rating/1.2.2/themes/fontawesome-stars-o.min.css">
+{% endblock %}
+
+{% block header %}
+    <header>
+        <img src="https://cdn.waterstones.com/images/00107529-2480x736.jpeg" alt="">
+    </header>
+{% endblock %}
+
+{% block content %}
+
+    <h1>My Books</h1>
+
+    {% if books %}
+
+        {% include '::book-grid.html.twig' with { 'books': books, 'isUserBook': true } %}
+
+    {% else %}
+
+        <p>There are currently no books</p>
+
+    {% endif %}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-bar-rating/1.2.2/jquery.barrating.min.js"></script>
+    <script src="{{ asset('js/barrating_init.js') }}"></script>
+{% endblock %}

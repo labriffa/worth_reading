@@ -1,0 +1,53 @@
+<div class="books">
+{% for book in books %}
+    {% if (loop.index % 2 != 0) or (loop.index == 1) %}
+        <div class="row">
+    {% endif %}
+    <div class="col-6">
+        <div class="book">
+            <div class="row">
+                <div class="col-5">
+                    {% if isUserBook is defined %}
+                        <div class="user-book-controls">
+                            <span>
+                                <a href="{{ path('worth_reading_books_edit', { 'id': book.id } ) }}"><i class="ion-edit"></i>Edit</a>
+                                <a href=""><i class="ion-trash-b"></i>Remove</a>
+                            </span>
+                        </div>
+                    {% endif %}
+                    <a href="{{ path('worth_reading_books_show', { 'id': book.id }) }}">
+                        <img class="book__image" src="{{ asset('uploads/books/covers/') }}{{  book.bookCover }}" alt="">
+                    </a>
+                </div>
+                <div class="col-7 book__info">
+                    <a class="book__link" href="{{ path('worth_reading_books_show', { 'id': book.id }) }}">
+                        <p class="book__title">{{ book.title }}</p>
+                    </a>
+                    <div class="book__author">
+                        by {{ book.authors[0].name }}
+                    </div>
+                    <select name="" style="visibility: hidden" class="book-list-avg-rating-js" data-rating="{{ book.avgRating }}">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                    <p class="book__summary">{{ book.summary | length > 90 ? book.summary | slice(0, 90) ~ '...' : book.summary }}</p>
+                    {% if is_granted('ROLE_USER') and not book.isLovedByCurrentUser %}
+                        <button data-id="{{ book.id }}" class="btn--blue wishlist-btn-js">Add to Wishlist</button>
+                    {% elseif is_granted('ROLE_USER') and book.isLovedByCurrentUser %}
+                        <button data-id="{{ book.id }}" class="btn--yellow-fill wishlist-btn-js">Remove from Wishlist</button>
+                    {% else %}
+                        <a href="{{ path('worth_reading_user_wishlist') }}" class="btn--blue">Add to Wishlist</a>
+                    {% endif %}
+                    <i class="loading-icon loading-icon-js ion-load-c"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if loop.index % 2 == 0 or loop.last %}
+        </div>
+    {% endif %}
+{% endfor %}
+</div>

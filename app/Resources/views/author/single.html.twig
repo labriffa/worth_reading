@@ -1,0 +1,38 @@
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-bar-rating/1.2.2/themes/fontawesome-stars.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-bar-rating/1.2.2/themes/fontawesome-stars-o.min.css">
+{% endblock %}
+
+{% block content %}
+
+    <div class="author-page-header row">
+        <div class="col-4">
+            <img src="{{ asset('uploads/authors/avatars/') }}{{ author.avatar }}" alt="">
+        </div>
+        <div class="col-8">
+            <div class="author__info">
+                <h1>{{ author.name }}</h1>
+                <p>{{ author.biography }}</p>
+            </div>
+        </div>
+    </div>
+
+    {% if books %}
+
+        {% include '::book-grid.html.twig' with { 'books': books } %}
+
+    {% else %}
+
+        <p>There are currently no books</p>
+
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-bar-rating/1.2.2/jquery.barrating.min.js"></script>
+    <script src="{{ asset('js/barrating_init.js') }}"></script>
+{% endblock %}

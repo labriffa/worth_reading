@@ -1,0 +1,26 @@
+easy_admin_bundle:
+  resource: "@EasyAdminBundle/Controller/AdminController.php"
+  type:     annotation
+  prefix:   /admin
+
+worth_reading:
+  path: /
+  defaults: { _controller: AppBundle:Book:index }
+
+fos:
+  resource: 'config/routing/fos_routing.yml'
+
+worth_reading_books:
+  resource: 'config/routing/book_routing.yml'
+  prefix: /books
+
+worth_reading_genres:
+  resource: 'config/routing/genre_routing.yml'
+  prefix: /genres
+
+worth_reading_authors:
+  resource: 'config/routing/author_routing.yml'
+  prefix: /authors
+
+worth_reading_user:
+  resource: 'config/routing/user_routing.yml'

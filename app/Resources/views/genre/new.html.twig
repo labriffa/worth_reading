@@ -1,0 +1,11 @@
+{% extends '::base.html.twig' %}
+
+{% block content %}
+
+    <h1>Add a Genre</h1>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <input type="submit" value="Submit" class="btn--submit">
+    {{ form_end(form) }}
+{% endblock %}

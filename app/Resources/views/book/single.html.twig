@@ -1,0 +1,156 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-bar-rating/1.2.2/themes/fontawesome-stars.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-bar-rating/1.2.2/themes/fontawesome-stars-o.min.css">
+{% endblock %}
+
+{% block sidebar %}
+    <div class="widget">
+        <img style="    height: 148px;
+    object-fit: cover;
+    /* margin: 0 auto; */
+    display: block;
+    width: 50%;
+    text-align: left;
+    float: left;
+    position: relative;
+    left: 0px;
+    top: 0px;" src="{{ asset('uploads/authors/avatars/') }}{{ book.authors[0].avatar }}" alt="">
+        <div class="bio-box" style="
+    float: right;
+    background: #fdfdfd;
+    height: 148px;
+    /* margin-bottom: 5px; */
+    width: 50%;
+    text-align: center;
+    line-height: 142px;
+    font-size: 18px;
+    color: #5e5b5b;
+    background: url({{ asset('uploads/authors/signatures/') }}{{ book.authors[0].signature }});
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 80%;
+    text-indent: -680px;
+    background-color: #e5e5e5;
+">Lisa Stromme</div>
+    </div>
+    <div class="widget widget--noir" style="clear:both">
+        {#<ul>#}
+            {#<li>DOB: <span style="float:right;">20/01/1983</span></li>#}
+            {#<li>Birthplace: <span style="float:right;">Sacremnto USA</span></li>#}
+            {#<li>First Publication: <span style="float:right;">2010</span></li>#}
+            {#<li>Genres: <span style="float:right;">Romance, Thriller</span></li>#}
+        {#</ul>#}
+        <p style="white-space: normal; line-height: 1.5">
+            {{ book.authors[0].biography | length > 200 ? book.authors[0].biography | slice(0, 200) ~ '...' : book.authors[0].biography }}
+        </p>
+    </div>
+{% endblock %}
+{% block content %}
+    <div class="single">
+        <div class="row">
+            <div class="col-4" style="margin-right: 20px; display: block">
+                <img src="{{ asset('uploads/books/covers/') }}{{ book.bookCover }}" alt="">
+                <ul class="genre__list">
+                    {% for genre in book.genres %}
+                    <li>
+                        <a href="{{ path('worth_reading_genres_show', { 'id': genre.id }) }}">{{ genre.name }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-8">
+                <div class="book__info">
+                    <h1>{{ book.title }}</h1>
+                    <div class="book__author">
+                        by
+                        {% for author in book.authors %}
+                            {{ author.name }}
+                            {% if not loop.last %}
+                                ,
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="book_review">
+                        <select name="" id="book-avg-rating-js" style="visibility: hidden;" data-rating="{{ avgRating }}">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                        <span style="padding-left: 5px">({{ numReviews }}) Reviews</span>
+                    </div>
+                    <h3>Description</h3>
+                    <div class="book__summary">
+                        {{ book.summary }}
+                    </div>
+                </div>
+            </div>
+        </div><!-- end of row -->
+        <div class="reviews">
+            <h2>Reviews <small>({{ numReviews }})</small></h2>
+            <div style="clear: both"></div>
+
+            {% if 9 == 0 %}
+                <p>There are currently no reviews.</p>
+            {% endif %}
+
+            {% for review in book.reviews %}
+                <div class="review">
+                    <div class="review__title">
+                        <h3>{{ review.title }}</h3>
+                    </div>
+                    <div class="review__stars">
+                        <select name="" class="review-rating" id="num" data-rating="{{ review.rating }}">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                    <div class="review__author">
+                        by {{ review.user.username }}
+                    </div>
+                    <div class="review__text">
+                        {{ review.text }}
+                    </div>
+                </div>
+            {% endfor %}
+
+            {% if is_granted('ROLE_USER') %}
+                <div>
+                    {% if review %}
+                        <h2>Edit Review</h2>
+                    {% else %}
+                        <h2>Leave a Review</h2>
+                    {% endif %}
+                    <div style="clear: both"></div>
+                    {{ form_start(review_form, { 'attr': { 'class': 'review_form' } }) }}
+                    {{ form_widget(review_form) }}
+
+                    {% if review %}
+                        <input type="hidden" id="user-reviewed-js" data-rating="{{ review.rating }}">
+                    {% endif %}
+
+                    <input type="submit" value="Submit" class="btn--submit">
+                    {{ form_end(review_form) }}
+                </div>
+            {% else %}
+                <div>
+                    <h3 style="margin: 0"><a href="{{ path("fos_user_security_login") }}">Sign in to leave a review</a></h3>
+                </div>
+            {% endif %}
+        </div>
+    </div><!-- end of single -->
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-bar-rating/1.2.2/jquery.barrating.min.js"></script>
+    <script src="{{ asset('js/barrating_init.js') }}"></script>
+{% endblock %}

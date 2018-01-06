@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% block stylesheets %}
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.2/chosen.min.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.2.0/min/dropzone.min.css">
+            <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+            <link rel="stylesheet" href="{{  asset('css/main.css')  }}" />
+        {% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body>
+
+    <div class="overlay"></div>
+
+    {% if app.session.flashBag.has('error') %}
+        <div class="alert alert-error">
+            {% for msg in app.session.flashBag.get('error') %}
+                {{ msg }} <i class="close-icon close-icon-js ion-close-circled"></i>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <nav>
+        <div class="container">
+            <div class="row">
+                <div class="col-4">
+                    <form class="js-search-form" id="search-form" action="{{ path('worth_reading_books_search') }}" method="GET">
+                        <input class="search-input input input--rounded" name="q" type="text" placeholder="search for isbn, title, author..." autocomplete="off">
+                        <i class="ion-search search-icon"></i>
+                        <ul class="search-suggestions">
+
+                        </ul>
+                    </form>
+                </div>
+                <div class="col-4 text-center">
+                    <h1 class="logo"><a href="{{ path('worth_reading') }}">worth<span class="logo-end">reading</span></a></h1>
+                </div>
+                <div class="col-4 text-center">
+
+                    <div class="hamburger-menu">
+                        <i class="ion-navicon"></i>
+                    </div>
+
+                    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                        <ul class="account-nav">
+                            <li>
+                                <a href="" class="upper btn btn--rounded btn--black">{{ app.user.username }}</a>
+                                <ul class="account-dropdown">
+                                    <li><a href="{{ path('fos_user_profile_show') }}"><i class="ion-person"></i>My Account</a></li>
+                                    <li><a href="{{ path('worth_reading_books_new') }}"><i class="ion-ios-book"></i>Add a Book</a></li>
+                                    <li><a href="{{ path('worth_reading_user_my_books') }}"><i class="ion-ios-book-outline"></i>My Books</a></li>
+                                    <li><a href="{{ path('worth_reading_user_wishlist') }}"><i class="ion-heart"></i>My Wishlist</a></li>
+                                    <li><a href="{{ path('fos_user_security_logout') }}"><i class="ion-log-out"></i>Logout</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    {% else %}
+                        <a href="{{ path('fos_user_security_login') }}" class="login-btn upper btn btn-ghost--white">Sign In</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="mobile-menu">
+            <ul>
+                <li>
+                    <form class="js-search-form" id="search-form" action="{{ path('worth_reading_books_search') }}" method="GET">
+                        <input class="search-input input input--rounded" name="q" type="text" placeholder="search for isbn, title, author..." autocomplete="off">
+                        <i class="ion-search search-icon"></i>
+                        <ul class="search-suggestions">
+                        </ul>
+                    </form>
+                </li>
+                <li>
+                    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                        <ul class="account-nav">
+                            <li>
+                                <a href="" class="upper btn btn--rounded btn--black">{{ app.user.username }}</a>
+                                <ul class="account-dropdown">
+                                    <li><a href="{{ path('fos_user_profile_show') }}"><i class="ion-person"></i>My Account</a></li>
+                                    <li><a href="{{ path('worth_reading_books_new') }}"><i class="ion-heart"></i>Add a Book</a></li>
+                                    <li><a href="{{ path('worth_reading_user_my_books') }}"><i class="ion-ios-book-outline"></i>My Books</a></li>
+                                    <li><a href="{{ path('worth_reading_user_wishlist') }}"><i class="ion-heart"></i>My Wishlist</a></li>
+                                    <li><a href="{{ path('fos_user_security_logout') }}"><i class="ion-log-out"></i>Logout</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    {% else %}
+                        <a href="{{ path('fos_user_security_login') }}" class="login-btn upper btn btn-ghost--white">Sign In</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container" id="main">
+        <div class="row">
+            <div class="col-3" id="sidebar">
+                {% block sidebar %}
+                    <div class="widget top-authors">
+                        <h3>Today's Top Authors</h3>
+                        <ul>
+                            <li>
+                                <div class="row">
+                                    <div class="col-2"><img src="https://www.famousbirthdays.com/faces/king-stephen-image.jpg" alt=""></div>
+                                    <div class="col-7">Stephen King</div>
+                                    <div class="col-2 badge">1</div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="row">
+                                    <div class="col-2"><img src="https://www.biography.com/.image/t_share/MTE1ODA0OTcxMzcxNTYyNTA5/jk-rowling-40998-1-402.jpg" alt=""></div>
+                                    <div class="col-7">J.K. Rowling</div>
+                                    <div class="col-2 badge">2</div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="row">
+                                    <div class="col-2"><img src="https://static.independent.co.uk/s3fs-public/thumbnails/image/2014/07/09/21/george-rr-martin.jpg" alt=""></div>
+                                    <div class="col-7">R.R. Martin</div>
+                                    <div class="col-2 badge">3</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="widget">
+                        <h3>Latest Reviews</h3>
+                        <ul style="font-weight: normal">
+                            <li>Really Great! I would highly recommend this book to anyone...</li>
+                            <li>Awesome book actually</li>
+                            <li>One of a kind</li>
+                        </ul>
+                    </div>
+                {% endblock %}
+            </div>
+            <div class="col-9" id="content">
+                {% block content %}
+                {% endblock %}
+            </div>
+            </div>
+        </div>
+        {% block javascripts %}
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+            <script src="{{ asset('js/main.js') }}"></script>
+        {% endblock %}
+    </body>
+</html>

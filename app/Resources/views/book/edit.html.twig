@@ -1,0 +1,28 @@
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    {# load in image upload previewer theme #}
+    <link href="{{ asset('assets/vendor/ssi-uploader/dist/ssi-uploader/styles/ssi-uploader.min.css') }}" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+    <h1>Edit Book</h1>
+    {{ form_start(form, { 'attr': { 'novalidate': 'novalidate' } }) }}
+    {{ form_widget(form) }}
+    <input type="submit" value="Update" class="btn--submit">
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {# load in multiselect dropdown ui with search  #}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.2/chosen.jquery.min.js"></script>
+    <script src="{{ asset('js/chosen_init.js') }}"></script>
+
+    {# load in image upload previewer #}
+    <script src="{{ asset('assets/vendor/ssi-uploader/dist/ssi-uploader/js/ssi-uploader.min.js') }}"></script>
+    <script src="{{ asset('js/ssi_init.js') }}"></script>
+{% endblock %}

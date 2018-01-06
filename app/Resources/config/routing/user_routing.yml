@@ -1,0 +1,17 @@
+worth_reading_user_wishlist_add:
+  path: /wishlist/add/{id}
+  methods: [POST]
+  defaults: { _controller: AppBundle:User:addToWishlist }
+
+worth_reading_user_wishlist_remove:
+  path: /wishlist/remove/{id}
+  methods: [POST]
+  defaults: { _controller: AppBundle:User:removeFromWishlist }
+
+worth_reading_user_wishlist:
+  path: /wishlist
+  defaults: { _controller: AppBundle:User:wishlist }
+
+worth_reading_user_my_books:
+  path: /my-books
+  defaults: { _controller: AppBundle:User:myBooks }

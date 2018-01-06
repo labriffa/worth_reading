@@ -1,0 +1,11 @@
+worth_reading_authors:
+  path: /
+  defaults: { _controller: AppBundle:Author:index }
+
+worth_reading_authors_new:
+  path: /new
+  defaults: { _controller: AppBundle:Author:new }
+
+worth_reading_authors_show:
+  path: /{id}
+  defaults: { _controller: AppBundle:Author:show }
