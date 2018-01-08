@@ -9,65 +9,67 @@ use AppBundle\Form\BookType;
 use AppBundle\Form\ReviewType;
 use AppBundle\Service\AuthorService;
 use AppBundle\Service\BookService;
-use AppBundle\Service\CoverFileUploader;
 use AppBundle\Service\ReviewService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class BookController extends Controller
 {
+     const BOOKS_PER_PAGE = 6;
+
     /**
      * Retrieves all books
      *
+     * @Template(":book:index.html.twig")
      * @return Response
      */
-    public function indexAction(Request $request, BookService $bookService, ReviewService $reviewService) : Response
+    public function indexAction(BookService $bookService) : array
     {
-        $books = $this->getDoctrine()->getRepository(Book::class)->findAll();
+        $books = $bookService->getRecentBooks(BookController::BOOKS_PER_PAGE);
 
-        $paginator  = $this->get('knp_paginator');
-        $pagination = $paginator->paginate(
-            $books,
-            $request->query->getInt('page', 1),
-            $this->getParameter('num_items_per_page') /*limit per page*/
-        );
+        return ['books' => $books];
+    }
 
-        $books = $bookService->getPreparedBooks($pagination, $this->getUser(), $reviewService);
+    /**
+     * @Template(":book:books.html.twig")
+     * @param Request $request
+     * @param BookService $bookService
+     * @return array
+     */
+    public function booksAction(Request $request, BookService $bookService) : array
+    {
+        $genre = $request->query->get('genre');
+        $author = $request->query->get('author');
 
-        return $this->render(':book:index.html.twig', [
-            'books' => $books,
-            'showcase_books' => $books,
-            'pagination' => $pagination,
-        ]);
+        $arr = $bookService->filter(['genres' => $genre, 'authors' => $author]);
+
+        $pagination = $bookService->paginate($arr['books'], 'page');
+
+        return [
+            'books' => $pagination,
+            'filters' => $arr['filters']
+        ];
     }
 
     /**
      * Retrieves a single book entry
      *
+     * @Template(":book:single.html.twig")
      * @param int $id
      * @return Response
      */
-    public function showAction(Request $request, Book $book, ReviewService $reviewService) : Response
+    public function showAction(Request $request, Book $book, ReviewService $reviewService) : array
     {
         // get user
         $user = $this->getUser();
 
-        $review = new Review();
+        $review = $user ? $reviewService->userBookReview($book, $user) : new Review();
 
-        // check if user has already reviewed this book
-        if($user) {
-            $review = $reviewService->userBookReview($book, $user);
-        }
-
-        // create the review form
         $review_form = $this->createForm(ReviewType::class, $review);
-
-        // get this books average rating and number of reviews
-        $bookAvgRating = $reviewService->averageBookReviewRating($book);
-        $bookNumReviews = $reviewService->numBookReviews($book);
 
         // if the user is logged in
         if($user) {
@@ -82,48 +84,54 @@ class BookController extends Controller
             }
         }
 
-        return $this->render(':book:single.html.twig', [
+        return [
             'book' => $book,
             'review_form' => $review_form->createView(),
             'review' => $review,
-            'avgRating' => $bookAvgRating,
-            'numReviews' => $bookNumReviews,
-        ]);
+            'avgRating' => $reviewService->averageBookReviewRating($book),
+            'numReviews' => $reviewService->numBookReviews($book),
+        ];
     }
 
     /**
      * Creates a new book entry
      *
+     * @Template(":book:new.html.twig")
      * @return Response
      */
-    public function newAction(Request $request, BookService $bookService) : Response
+    public function newAction(Request $request, BookService $bookService) : array
     {
         $book = new Book();
         $form = $this->createForm(BookType::class, $book);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()) {
-            $bookService->add($book, $this->getUser());
+            $foundBook = $this->getDoctrine()->getRepository(Book::class)->findBy(['isbn' => $book->getIsbn()]);
+            if(!$foundBook) {
+                $bookService->add($book, $this->getUser());
+                return $this->redirectToRoute('worth_reading_books_show', ['id'=>$book->getId()]);
+            } else {
+                $this->get('session')->getFlashBag()->add('error', 'A book with that ISBN already exists');
+            }
         }
 
-        return $this->render(':book:new.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return ['form' => $form->createView()];
     }
 
     /**
      * Edits a single book entry
      *
+     * @Template(":book:edit.html.twig")
      * @param Book $book
      * @return Response
      */
-    public function editAction(Request $request, Book $book, BookService $bookService) : Response
+    public function editAction(Request $request, Book $book, BookService $bookService) : array
     {
+        // access control covers anonymous users, but we also need to make sure this is a user book
         if($book->getUser() !== $this->getUser()) {
             throw new AccessDeniedException('You do not have permission to view this page');
         }
 
-        $book->setBookCover(new File($this->getParameter('book_covers_directory').'/'.$book->getBookCover()));
         $form = $this->createForm(BookType::class, $book);
 
         $form->handleRequest($request);
@@ -132,60 +140,45 @@ class BookController extends Controller
             $bookService->update($book, $this->getUser());
         }
 
-        return $this->render(':book:edit.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return ['form' => $form->createView(), 'book' => $book];
     }
 
     /**
      * Removes a single book entry
      *
      * @param int $id
+     * @return Response
      */
-    public function removeAction(int $id)
+    public function removeAction(Book $book) : Response
     {
+        if($book->getUser() !== $this->getUser()) {
+            throw new AccessDeniedException('You do not have permission to perform this action');
+        }
 
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($book);
+        $em->flush();
+
+        return $this->redirectToRoute('worth_reading_user_my_books');
     }
 
 
     /**
+     * @Template(":book:search.html.twig")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function searchAction(Request $request, BookService $bookService, AuthorService $authorService, ReviewService $reviewService)
+    public function searchAction(Request $request, BookService $bookService, AuthorService $authorService) : array
     {
-        $searchQuery = $request->query->get('q');
+        $query = $request->query->get('q');
 
-        $books = $bookService->searchTitle($searchQuery);
-        $authors = $authorService->searchName($searchQuery);
+        $books = $bookService->paginate($bookService->searchTitle($query), 'page-book');
+        $authors = $authorService->paginate($authorService->searchName($query), 'page-author');
 
-        $paginator  = $this->get('knp_paginator');
-        $bookPagination = $paginator->paginate(
-            $books,
-            $request->query->getInt('page-book', 1),
-            $this->getParameter('num_items_per_page') /*limit per page*/,
-            [
-                'pageParameterName' => 'page-book'
-            ]
-        );
-
-        $authorPagination = $paginator->paginate(
-            $authors,
-            $request->query->getInt('page-author', 1),
-            $this->getParameter('num_items_per_page') /*limit per page*/,
-            [
-                'pageParameterName' => 'page-author'
-            ]
-        );
-
-        $books = $bookService->getPreparedBooks($bookPagination, $this->getUser(), $reviewService);
-
-        return $this->render(':book:search.html.twig', [
+        return [
             'books' => $books,
             'authors' => $authors,
-            'searchQuery' => $searchQuery,
-            'bookPagination' => $bookPagination,
-            'authorPagination' => $authorPagination,
-        ]);
+            'searchQuery' => $query,
+        ];
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Repository;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * BookRepository
@@ -10,12 +11,213 @@ namespace AppBundle\Repository;
  */
 class BookRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * Searches for books by their title based on a given
+     * term
+     *
+     * @param string $query
+     * @return \Doctrine\ORM\Query
+     */
     public function searchTitle(string $query)
     {
-        $qb = $this->getEntityManager()
-            ->createQuery("SELECT b FROM AppBundle:Book b WHERE b.title LIKE ?1")
-            ->setParameter('1', '%'.$query.'%');
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('b')
+            ->from('AppBundle:Book', 'b')
+            ->where('b.title LIKE ?1')
+            ->setParameter('1', '%'.$query.'%')
+            ->getQuery();
 
         return $qb;
+    }
+
+    /**
+     * Retrieves the 'x' most recent books
+     *
+     * @param int $limit
+     * @return mixed
+     */
+    public function getRecentBooks(int $limit)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('b')
+            ->from('AppBundle:Book', 'b')
+            ->orderBy('b.id', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->execute();
+
+        return $qb;
+    }
+
+    /**
+     * Creates a condition for use in a filter query
+     *
+     * @param array $filters
+     * @return string
+     */
+    private function createFilterCondition(array $filters)
+    {
+        $condition = [];
+
+        // concatenate the filter condition based on the filter data passed
+        for($i = 0; $i < count($filters['ids']); $i++)
+        {
+            if(isset($filters['values'][$i]))
+            {
+                array_push($condition, $filters['ids'][$i] . '.id=?' . $i);
+            }
+        }
+
+        return implode(' AND ', $condition);
+    }
+
+    /**
+     * Retrieves a refinement of books and provides the filters that are left to be used
+     * based on the filter data that is currently set
+     *
+     * @param array $filterData
+     * @return array
+     */
+    public function filter(array $filterData)
+    {
+        // set the currently available filters
+        $filterTypes = [$filterData['genres'], $filterData['authors']];
+
+        // create the filter condition for use in the books and filters query
+        $filterCondition = $this->createFilterCondition([
+            'ids' => ['g', 'a'],
+            'values' => [$filterData['genres'], $filterData['authors']]
+        ]);
+
+        // get the books that match the passed filter data
+        $booksQb = $this->getEntityManager()->createQueryBuilder()
+            ->select('b')
+            ->from('AppBundle:Book', 'b')
+            ->leftJoin('b.genres', 'g')
+            ->leftJoin('b.authors', 'a');
+
+        // refine the filters based on the currently set filters
+        $filtersQb = $this->getEntityManager()->createQueryBuilder()
+            ->select("concat(g.name, '#', g.id, '#', 'genre') 
+                            as genre, concat(a.name, '#', a.id, '#', 'author') as name")
+            ->from('AppBundle:Book', 'b')
+            ->leftJoin('b.genres', 'g')
+            ->leftJoin('b.authors', 'a');
+
+
+        // set the parameters for the book and filter queries
+        $this->parameteriseFilterQuery($filterTypes, $filterCondition, $booksQb, $filtersQb);
+
+        // get the available filters
+        $filters = ($filtersQb->getQuery()->execute());
+        $filters = $this->cleanFilters($filters);
+
+        // execute the query and get the available books
+        $books = $booksQb->getQuery()->execute();
+
+        return [
+            'books' => $books,
+            'filters' => $filters
+        ];
+    }
+
+    /**
+     * Sets the query parameter by mapping a filter condition to the
+     * requirements of the query builder
+     *
+     * @param array $values
+     * @param string $condition
+     * @param QueryBuilder $booksQb
+     * @param QueryBuilder $filtersQb
+     */
+    private function parameteriseFilterQuery(
+        array $filterTypes,
+        string $condition,
+        QueryBuilder $booksQb,
+        QueryBuilder $filtersQb)
+    {
+        // dynamically add parameters to the books and filters query
+        if('' !== $condition)
+        {
+            $booksQb->where($condition);
+            $filtersQb->where($condition);
+
+            // tokenize the operands
+            $condition_operands = explode('AND', $condition);
+
+            for($i = 0; $i < count($condition_operands); $i++) {
+
+                // tokenize the individual conditions as to separate query placeholder
+                $condition_operand = explode('?', $condition_operands[$i]);
+
+                $condition_operand[1] = trim($condition_operand[1]);
+
+                // set the book parameter
+                $booksQb->setParameter(
+                    $condition_operand[1],
+                    $filterTypes[$condition_operand[1]]
+                );
+
+                // set the query parameter
+                $filtersQb->setParameter(
+                    $condition_operand[1],
+                    $filterTypes[$condition_operand[1]]
+                );
+            }
+        }
+    }
+
+    /**
+     * Cleans the passed filter data so that it's ready to be
+     * displayed in a template
+     *
+     * @param array $filters
+     * @return array
+     */
+    private function cleanFilters(array $filters)
+    {
+        $cleanedFilters = [];
+        $ids = [];
+
+        // clean the results of the book and filters query to
+        // prepare it for use in a twig template
+        for($i = 0; $i < count($filters); $i++)
+        {
+            // go through each filter result
+            foreach($filters[$i] as $filter_key => $filter_value)
+            {
+                // separate the filter data
+                $filter_arr = explode('#', $filter_value);
+
+                if(isset($cleanedFilters[$filter_key]))
+                {
+                    // check if this filter doesn't already exist
+                    if(!in_array($filter_value, $ids))
+                    {
+
+                        // organise these filter associated data
+                        array_push($cleanedFilters[$filter_key], [
+                                'value'    => $filter_arr[0],
+                                'id'       => $filter_arr[1],
+                                'name'     => $filter_arr[2],
+                            ]
+                        );
+                    }
+                } else
+                {
+                    $cleanedFilters[$filter_key] = [
+                        [
+                            'value'    => $filter_arr[0],
+                            'id' => $filter_arr[1],
+                            'name' => $filter_arr[2]
+                        ]
+                    ];
+                }
+
+                array_push($ids, $filter_value);
+            }
+        }
+
+        return $cleanedFilters;
     }
 }

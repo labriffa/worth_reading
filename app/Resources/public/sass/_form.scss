@@ -29,6 +29,21 @@
   /*transition: transform .3s;*/
 }
 
+.disabled {
+  opacity: .5;
+}
+
+#content #admin-role-form {
+
+  margin-top: 0px;
+
+  .btn--submit {
+    max-width: 120px;
+    padding: 5px;
+    margin-left: 20px;
+  }
+}
+
 .search-suggestions-awake {
   /*transform: translateY(0px);*/
 }
@@ -119,6 +134,13 @@
   text-align: right;
   font-family: 'Libre Baskerville', serif;
   font-weight: 700;
+}
+
+.btn--view-all {
+  float: right;
+  background: #dfdfdf;
+  padding: 10px 30px;
+  text-decoration: none;
 }
 
 .search-suggestions__book-info {

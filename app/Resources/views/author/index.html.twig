@@ -1,6 +1,7 @@
 {% extends '::base.html.twig' %}
 
 {% block content %}
+
     {% if authors %}
 
         {% for author in authors %}
@@ -11,7 +12,10 @@
 
     {% else %}
 
-        <p>There are currently no authors</p>
+        <p>
+            {% trans %}text.no_authors{% endtrans %}
+        </p>
 
     {% endif %}
+
 {% endblock %}

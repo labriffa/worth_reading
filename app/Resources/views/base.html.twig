@@ -6,7 +6,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         {% block stylesheets %}
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.2/chosen.min.css">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.2.0/min/dropzone.min.css">
             <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
             <link rel="stylesheet" href="{{  asset('css/main.css')  }}" />
         {% endblock %}
@@ -53,7 +52,7 @@
                                     <li><a href="{{ path('fos_user_profile_show') }}"><i class="ion-person"></i>My Account</a></li>
                                     <li><a href="{{ path('worth_reading_books_new') }}"><i class="ion-ios-book"></i>Add a Book</a></li>
                                     <li><a href="{{ path('worth_reading_user_my_books') }}"><i class="ion-ios-book-outline"></i>My Books</a></li>
-                                    <li><a href="{{ path('worth_reading_user_wishlist') }}"><i class="ion-heart"></i>My Wishlist</a></li>
+                                    <li><a href="{{ path('worth_reading_user_wishlist') }}"><i class="ion-heart"></i>My Reading List</a></li>
                                     <li><a href="{{ path('fos_user_security_logout') }}"><i class="ion-log-out"></i>Logout</a></li>
                                 </ul>
                             </li>
@@ -83,7 +82,7 @@
                                     <li><a href="{{ path('fos_user_profile_show') }}"><i class="ion-person"></i>My Account</a></li>
                                     <li><a href="{{ path('worth_reading_books_new') }}"><i class="ion-heart"></i>Add a Book</a></li>
                                     <li><a href="{{ path('worth_reading_user_my_books') }}"><i class="ion-ios-book-outline"></i>My Books</a></li>
-                                    <li><a href="{{ path('worth_reading_user_wishlist') }}"><i class="ion-heart"></i>My Wishlist</a></li>
+                                    <li><a href="{{ path('worth_reading_user_wishlist') }}"><i class="ion-heart"></i>My Reading List</a></li>
                                     <li><a href="{{ path('fos_user_security_logout') }}"><i class="ion-log-out"></i>Logout</a></li>
                                 </ul>
                             </li>

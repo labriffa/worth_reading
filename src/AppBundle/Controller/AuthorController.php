@@ -6,54 +6,54 @@ use AppBundle\Entity\Author;
 use AppBundle\Form\AuthorType;
 use AppBundle\Service\AuthorService;
 use AppBundle\Service\BookService;
-use AppBundle\Service\FileUploader;
-use AppBundle\Service\AvatarFileUploader;
-use AppBundle\Service\ReviewService;
-use AppBundle\Service\SignatureFileUploader;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
+/**
+ *
+ *
+ * Class AuthorController
+ * @package AppBundle\Controller
+ */
 class AuthorController extends Controller
 {
     /**
      * Shows a list of authors
      *
+     * @Template(":author:index.html.twig")
      * @return Response
      */
-    public function indexAction() : Response
+    public function indexAction() : array
     {
         $authors = $this->getDoctrine()->getRepository(Author::class)->findAll();
 
-        return $this->render(':author:index.html.twig', [
-            'authors' => $authors
-        ]);
+        return ['authors' => $authors];
     }
 
     /**
      * Shows all books for the chosen author
      *
+     * @Template(":author:single.html.twig")
      * @param Author $author
      * @return Response
      */
-    public function showAction(Author $author, BookService $bookService, ReviewService $reviewService) : Response
+    public function showAction(Author $author, BookService $bookService) : array
     {
-        $books = $author->getBooks();
-        $books = $bookService->getPreparedBooks($books, $this->getUser(), $reviewService);
+        $books = $bookService->prepareBooks($author->getBooks());
 
-        return $this->render(':author:single.html.twig', [
-            'author' => $author,
-            'books' => $books,
-        ]);
+        return ['author' => $author, 'books' => $books,];
     }
 
     /**
      * Creates a new author
      *
+     * @Template(":author:new.html.twig")
      * @return Response
      */
-    public function newAction(Request $request, AuthorService $authorService) : Response
+    public function newAction(Request $request, AuthorService $authorService) : array
     {
         $author = new Author();
         $form = $this->createForm(AuthorType::class, $author);
@@ -63,29 +63,6 @@ class AuthorController extends Controller
             $authorService->add($author);
         }
 
-        return $this->render(':author:new.html.twig', [
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * Allows editing for the chosen author
-     *
-     * @return Response
-     */
-    public function editAction(Author $author) : Response
-    {
-
-    }
-
-    /**
-     * Removes the chosen author
-     *
-     * @param Author $author
-     * @return Response
-     */
-    public function removeAction(Author $author) : Response
-    {
-
+        return ['form' => $form->createView()];
     }
 }

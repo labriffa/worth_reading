@@ -4,9 +4,17 @@ namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * A class representing the form details of a review entity
+ *
+ * Class ReviewType
+ * @package AppBundle\Form
+ */
 class ReviewType extends AbstractType
 {
     /**
@@ -15,9 +23,16 @@ class ReviewType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title')
-            ->add('text')
+            ->add('title', TextType::class, [
+                'label' => 'label.title',
+            ])
+            ->add('text', TextareaType::class, [
+                'label' => 'label.text',
+            ])
             ->add('rating', ChoiceType::class, [
+
+                'label' => 'label.rating',
+
                 'choices' => [
                     '1' => 1,
                     '2' => 2,
@@ -27,7 +42,8 @@ class ReviewType extends AbstractType
                 ],
                 'attr' => [
                     'class' => 'book_review_form_stars-js'
-                ]
+                ],
+                'choice_translation_domain' => false
             ]);
     }/**
      * {@inheritdoc}
@@ -46,6 +62,4 @@ class ReviewType extends AbstractType
     {
         return 'appbundle_review';
     }
-
-
 }

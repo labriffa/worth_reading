@@ -8,45 +8,44 @@
 
 namespace AppBundle\Service;
 
-
 use AppBundle\Entity\Author;
 use AppBundle\Repository\AuthorRepository;
 use Doctrine\ORM\EntityManager;
 
-class AuthorService
+/**
+ * A class that exposes a number of functionalities concerned with
+ * author entities
+ *
+ * Class AuthorService
+ * @package AppBundle\Service
+ */
+class AuthorService extends EntityService
 {
-    private $repository;
-    private $entityManager;
-
-    // image uploaders
-    private $avatarFileUploader;
-    private $signatureFileUploader;
-
-    public function __construct(AuthorRepository $repository, EntityManager $entityManager, AvatarFileUploader $avatarFileUploader, SignatureFileUploader $signatureFileUploader)
+    public function __construct(AuthorRepository $repo, EntityManager $em, PaginationService $pageService)
     {
-        $this->repository = $repository;
-        $this->entityManager = $entityManager;
-        $this->avatarFileUploader = $avatarFileUploader;
-        $this->signatureFileUploader = $signatureFileUploader;
+        parent::__construct($repo, $em, $pageService);
     }
 
+    /**
+     * Adds a given author
+     *
+     * @param Author $author
+     */
     public function add(Author $author)
     {
-        $avatarFile    = $author->getAvatar();
-        $signatureFile = $author->getSignature();
-
-        $avatarFileName = $this->avatarFileUploader->upload($avatarFile);
-        $signatureFileName = $this->signatureFileUploader->upload($signatureFile);
-
-        $author->setAvatar($avatarFileName);
-        $author->setSignature($signatureFileName);
-
-        $this->entityManager->persist($author);
-        $this->entityManager->flush();
+        $this->getRepo()->persist($author);
+        $this->getEm()->flush();
     }
 
+    /**
+     * Retrieves authors by their name based on a given
+     * search term
+     *
+     * @param string $query
+     * @return \Doctrine\ORM\Query
+     */
     public function searchName(string $query)
     {
-        return $this->repository->searchName($query);
+        return $this->getRepo()->searchName($query);
     }
 }

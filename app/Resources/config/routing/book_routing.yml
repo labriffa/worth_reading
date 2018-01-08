@@ -1,3 +1,7 @@
+worth_reading_books:
+  path: /
+  defaults: { _controller: AppBundle:Book:books }
+
 worth_reading_books_search:
   path: /search
   defaults: { _controller: AppBundle:Book:search }
@@ -13,3 +17,7 @@ worth_reading_books_show:
 worth_reading_books_edit:
   path: /edit/{id}
   defaults: { _controller: AppBundle:Book:edit }
+
+worth_reading_books_remove:
+  path: /remove/{id}
+  defaults: { _controller: AppBundle:Book:remove }

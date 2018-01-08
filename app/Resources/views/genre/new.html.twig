@@ -2,10 +2,12 @@
 
 {% block content %}
 
-    <h1>Add a Genre</h1>
+    <h1>
+        {% trans %}title.add_genre{% endtrans %}
+    </h1>
 
     {{ form_start(form) }}
     {{ form_widget(form) }}
-    <input type="submit" value="Submit" class="btn--submit">
+        <input type="submit" value="{% trans %}text.submit{% endtrans %}" class="btn--submit">
     {{ form_end(form) }}
 {% endblock %}

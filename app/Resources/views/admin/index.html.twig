@@ -1,0 +1,67 @@
+{% extends '::base.html.twig' %}
+
+{% block content %}
+
+    {% if users %}
+
+        <h2>User Role Control Panel</h2>
+
+        <hr>
+
+        <table class="admin-role-table">
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Enabled</th>
+                <th>Last Login</th>
+                <th>Roles</th>
+            </tr>
+
+            {% for user in users %}
+
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.enabled }}</td>
+                    <td>{{ user.lastLogin | date('Y-m-d') }}</td>
+                    <td>{{ user.roles[0] }}</td>
+                    <td>
+                        <form action="" id="admin-role-form">
+                            <select id="role-change-select-js">
+                                <option value="ROLE_USER" selected>ROLE_USER</option>
+                                {% for role in security_roles | keys  %}
+                                    {% if user.roles[0] == role %}
+                                        <option value="{{ role }}" selected>{{ role }}</option>
+                                    {% else %}
+                                        <option value="{{ role }}">{{ role }}</option>
+                                    {% endif %}
+
+                                {% endfor %}
+                            </select>
+                            {% if currentUser.id == user.id %}
+                                <input disabled class="btn--submit role-change-js disabled" type="submit" value="Update" data-id="{{ user.id }}"/>
+                            {% else %}
+                                <input class="btn--submit role-change-js" type="submit" value="Update" data-id="{{ user.id }}"/>
+                            {% endif %}
+                        </form>
+                    </td>
+                </tr>
+
+            {% endfor %}
+        </table>
+
+        <div>
+            {{ knp_pagination_render(users) }}
+        </div>
+
+    {% else %}
+
+        <p>
+            There are currently no users
+        </p>
+
+    {% endif %}
+
+{% endblock %}

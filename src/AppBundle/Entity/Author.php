@@ -3,13 +3,17 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * Author
  *
  * @ORM\Table(name="authors")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\AuthorRepository")
+ * @Vich\Uploadable
  */
 class Author
 {
@@ -30,11 +34,18 @@ class Author
     private $name;
 
     /**
-     * @var string|null
+     * @var string
      *
      * @ORM\Column(name="avatar", type="string", length=255, nullable=true)
      */
     private $avatar;
+
+    /**
+     * @Vich\UploadableField(mapping="author_avatar", fileNameProperty="avatar")
+     *
+     * @var File
+     */
+    private $avatarFile;
 
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -43,11 +54,18 @@ class Author
     private $books;
 
     /**
-     * @var string|null
+     * @var string
      *
      * @ORM\Column(name="signature", type="string", length=255)
      */
     private $signature;
+
+    /**
+     * @Vich\UploadableField(mapping="author_signature", fileNameProperty="signature")
+     *
+     * @var File
+     */
+    private $signatureFile;
 
     /**
      * @var string|null
@@ -203,6 +221,25 @@ class Author
     public function getBiography()
     {
         return $this->biography;
+    }
+
+    public function getAvatarFile() {
+        return $this->avatarFile;
+    }
+
+    public function getSignatureFile()
+    {
+        return $this->signatureFile;
+    }
+
+    public function setSignatureFile(File $image = null)
+    {
+        $this->signatureFile = $image;
+    }
+
+    public function setAvatarFile(File $image = null)
+    {
+        $this->avatarFile = $image;
     }
 
     public function __toString()

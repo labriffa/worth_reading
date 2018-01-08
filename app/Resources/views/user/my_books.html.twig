@@ -6,23 +6,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-bar-rating/1.2.2/themes/fontawesome-stars-o.min.css">
 {% endblock %}
 
-{% block header %}
-    <header>
-        <img src="https://cdn.waterstones.com/images/00107529-2480x736.jpeg" alt="">
-    </header>
-{% endblock %}
-
 {% block content %}
 
-    <h1>My Books</h1>
+    <h1>{% trans %}title.my_books{% endtrans %}</h1>
 
-    {% if books %}
+    {% if books | length > 0 %}
 
-        {% include '::book-grid.html.twig' with { 'books': books, 'isUserBook': true } %}
+        <div class="my-books">
+            {% include '::book-grid.html.twig' with { 'books': books, 'isUserBook': true } %}
+        </div>
+
+        <div>
+            {{ knp_pagination_render(books) }}
+        </div>
 
     {% else %}
 
-        <p>There are currently no books</p>
+        <p>{% trans %}text.no_books{% endtrans %}</p>
 
     {% endif %}
 {% endblock %}

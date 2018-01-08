@@ -11,7 +11,7 @@
                         <div class="user-book-controls">
                             <span>
                                 <a href="{{ path('worth_reading_books_edit', { 'id': book.id } ) }}"><i class="ion-edit"></i>Edit</a>
-                                <a href=""><i class="ion-trash-b"></i>Remove</a>
+                                <a href="{{ path('worth_reading_books_remove', { 'id': book.id }) }}"><i class="ion-trash-b"></i>Remove</a>
                             </span>
                         </div>
                     {% endif %}
@@ -35,11 +35,17 @@
                     </select>
                     <p class="book__summary">{{ book.summary | length > 90 ? book.summary | slice(0, 90) ~ '...' : book.summary }}</p>
                     {% if is_granted('ROLE_USER') and not book.isLovedByCurrentUser %}
-                        <button data-id="{{ book.id }}" class="btn--blue wishlist-btn-js">Add to Wishlist</button>
+                        <button data-id="{{ book.id }}" class="btn--blue wishlist-btn-js">
+                            {% trans %}text.add_reading_list{% endtrans %}
+                        </button>
                     {% elseif is_granted('ROLE_USER') and book.isLovedByCurrentUser %}
-                        <button data-id="{{ book.id }}" class="btn--yellow-fill wishlist-btn-js">Remove from Wishlist</button>
+                        <button data-id="{{ book.id }}" class="btn--yellow-fill wishlist-btn-js">
+                            {% trans %}text.remove_reading_list{% endtrans %}
+                        </button>
                     {% else %}
-                        <a href="{{ path('worth_reading_user_wishlist') }}" class="btn--blue">Add to Wishlist</a>
+                        <a href="{{ path('worth_reading_user_wishlist') }}" class="btn--blue">
+                            {% trans %}text.add_reading_list{% endtrans %}
+                        </a>
                     {% endif %}
                     <i class="loading-icon loading-icon-js ion-load-c"></i>
                 </div>

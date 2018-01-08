@@ -51,11 +51,11 @@ $(document).ready(function() {
               if(wishlistAction === 'add') {
                   $_this.removeClass('btn--blue');
                   $_this.addClass('btn--yellow-fill');
-                  $_this.text('Remove from Wishlist');
+                  $_this.text('Remove from Reading List');
               } else {
                   $_this.removeClass('btn--yellow-fill');
                   $_this.addClass('btn--blue');
-                  $_this.text('Add to Wishlist');
+                  $_this.text('Add to Reading List');
               }
             }
        }).always(function() {
@@ -153,5 +153,26 @@ $(document).ready(function() {
     $('.overlay').click(function(){
         $('.search-suggestions').hide();
         $(this).hide();
+    });
+
+    $('.role-change-js').on('click', function(event) {
+
+        event.preventDefault();
+
+        var adminUrl = document.location.protocol + '//' + document.location.host + '/admin';
+        var $_this = $(this);
+
+        $.ajax({
+            method: 'POST',
+            url: adminUrl + '/change-role/' + $_this.prev().val() + '/' + $_this.data('id'),
+            data: {
+                roleId: 0,
+                userId: $_this.data('id'),
+            },
+            success: function(data) {
+                console.log(data);
+                document.location.reload();
+            }
+        });
     });
 });

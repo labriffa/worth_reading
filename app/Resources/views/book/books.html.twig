@@ -1,0 +1,60 @@
+{% extends '::base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-bar-rating/1.2.2/themes/fontawesome-stars.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-bar-rating/1.2.2/themes/fontawesome-stars-o.min.css">
+{% endblock %}
+
+{% block sidebar %}
+
+    <h1>Filters</h1>
+    {% for arr in filters %}
+        {% for filter in arr %}
+            {% if loop.first %}
+                <h2>{{ filter.name | title }}</h2>
+            {% endif %}
+            {% if app.request.query.get(filter.name) == filter.id  %}
+                <p class="filter filter-remove">
+                    <a href="{{ path('worth_reading_books', app.request.query.all|merge({ (filter.name): null })) }}">
+                        {{ filter.value }} <i class="ion-android-close"></i>
+                    </a>
+                </p>
+            {% else %}
+                <p class="filter">
+                    <a href="{{ path('worth_reading_books', app.request.query.all|merge({ (filter.name): (filter.id) })) }}">
+                        {{ filter.value }}
+                    </a>
+                </p>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% endblock %}
+
+{% block content %}
+
+    <h1>
+        {% trans %}title.books{% endtrans %}
+    </h1>
+
+    {% if books %}
+
+        {% include '::book-grid.html.twig' with { 'books' : books } %}
+
+        <div style="clear: both"></div>
+
+        <div>
+            {{ knp_pagination_render(books) }}
+        </div>
+
+    {% else %}
+
+        <p>{% trans %}text.no_books{% endtrans %}</p>
+
+    {% endif %}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-bar-rating/1.2.2/jquery.barrating.min.js"></script>
+    <script src="{{ asset('js/barrating_init.js') }}"></script>
+{% endblock %}

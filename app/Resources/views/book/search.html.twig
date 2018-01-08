@@ -8,18 +8,22 @@
 
 {% block content %}
 
-    <h1>Search results for "{{ searchQuery }}"</h1>
+    <h1>
+        {% trans %}title.search_results{% endtrans %} "{{ searchQuery }}"
+    </h1>
 
-    {% if bookPagination | length > 0 %}
+    {% if books | length > 0 %}
 
-        <h3>Books</h3>
+        <h3>
+            {% trans %}title.books{% endtrans %}
+        </h3>
 
         {% include '::book-grid.html.twig' with { 'books': books } %}
 
         <div style="clear: both"></div>
 
         <div>
-            {{ knp_pagination_render(bookPagination) }}
+            {{ knp_pagination_render(books) }}
         </div>
 
     {% endif %}
@@ -28,13 +32,16 @@
 
     <hr>
 
-    {% if authorPagination | length > 0 %}
-        <h3>Authors</h3>
-        {% for author in authorPagination %}
+    {% if authors | length > 0 %}
+
+        <h3>
+            {% trans %}title.authors{% endtrans %}
+        </h3>
+
+        {% for author in authors %}
                 {% if (loop.index % 2 != 0) or (loop.index == 1) %}
                     <div class="row">
                 {% endif %}
-
                     <div class="col-6">
                         <div class="row">
                             <div class="author">
@@ -59,13 +66,15 @@
             {% endfor %}
 
         <div>
-            {{ knp_pagination_render(authorPagination) }}
+            {{ knp_pagination_render(authors) }}
         </div>
 
     {% endif %}
 
-    {% if authorPagination | length == 0 and bookPagination | length == 0 %}
-         <p>No Search Results Were Found</p>
+    {% if authors | length == 0 and books | length == 0 %}
+         <p>
+             {% trans %}text.no_search_results{% endtrans %}
+         </p>
     {% endif %}
 
 {% endblock %}

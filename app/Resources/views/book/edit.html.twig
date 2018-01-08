@@ -1,18 +1,17 @@
 {% extends '::base.html.twig' %}
 
-{% block stylesheets %}
-    {{ parent() }}
-
-    {# load in image upload previewer theme #}
-    <link href="{{ asset('assets/vendor/ssi-uploader/dist/ssi-uploader/styles/ssi-uploader.min.css') }}" rel="stylesheet"/>
-{% endblock %}
-
 {% block content %}
-    <h1>Edit Book</h1>
-    {{ form_start(form, { 'attr': { 'novalidate': 'novalidate' } }) }}
+
+    <h1>
+        {% trans %}title.edit_book{% endtrans %}
+    </h1>
+
+    {{ form_start(form) }}
     {{ form_widget(form) }}
-    <input type="submit" value="Update" class="btn--submit">
+        <input type="submit" value="{% trans %}text.update{% endtrans %}" class="btn--submit">
+        <input type="hidden" id="book-cover-path-js" value="/uploads/books/covers/{{ book.bookCover }}">
     {{ form_end(form) }}
+
 {% endblock %}
 
 {% block javascripts %}
@@ -23,6 +22,5 @@
     <script src="{{ asset('js/chosen_init.js') }}"></script>
 
     {# load in image upload previewer #}
-    <script src="{{ asset('assets/vendor/ssi-uploader/dist/ssi-uploader/js/ssi-uploader.min.js') }}"></script>
     <script src="{{ asset('js/ssi_init.js') }}"></script>
 {% endblock %}

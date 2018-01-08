@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" target-language="en" datatype="plaintext" original="file.ext">
+        <body>
+
+            <!-- Labels -->
+            <trans-unit id="label_title">
+                <source>label.title</source>
+                <target>Title</target>
+            </trans-unit>
+            <trans-unit id="label_text">
+                 <source>label.text</source>
+                 <target>Text</target>
+            </trans-unit>
+            <trans-unit id="label_rating">
+                 <source>label.rating</source>
+                 <target>Rating</target>
+            </trans-unit>
+            <trans-unit id="label_name">
+                 <source>label.name</source>
+                 <target>Name</target>
+            </trans-unit>
+            <trans-unit id="label_biography">
+                 <source>label.biography</source>
+                 <target>Biography</target>
+            </trans-unit>
+            <trans-unit id="label_avatar">
+                  <source>label.avatar</source>
+                  <target>Avatar</target>
+            </trans-unit>
+            <trans-unit id="label_signature">
+                  <source>label.signature</source>
+                  <target>Signature</target>
+            </trans-unit>
+            <trans-unit id="label_isbn13">
+                  <source>label.isbn13</source>
+                  <target>ISBN (13)</target>
+            </trans-unit>
+            <trans-unit id="label_summary">
+                  <source>label.summary</source>
+                  <target>Summary</target>
+            </trans-unit>
+            <trans-unit id="label_cover">
+                  <source>label.cover</source>
+                  <target>Cover</target>
+            </trans-unit>
+            <trans-unit id="label_authors">
+                  <source>label.authors</source>
+                  <target>Authors</target>
+            </trans-unit>
+            <trans-unit id="label_genres">
+                  <source>label.genres</source>
+                  <target>Genres</target>
+            </trans-unit>
+
+
+            <!-- Titles -->
+            <trans-unit id="title_my_books">
+                  <source>title.my_books</source>
+                  <target>My Books</target>
+            </trans-unit>
+            <trans-unit id="title_recently_added">
+                  <source>title.recently_added</source>
+                  <target>Recently Added</target>
+            </trans-unit>
+            <trans-unit id="title_books">
+                   <source>title.books</source>
+                   <target>Books</target>
+            </trans-unit>
+            <trans-unit id="title_edit_book">
+                   <source>title.edit_book</source>
+                   <target>Edit Book</target>
+            </trans-unit>
+            <trans-unit id="title_add_book">
+                   <source>title.add_book</source>
+                   <target>Add a Book</target>
+            </trans-unit>
+            <trans-unit id="title_search_results">
+                    <source>title.search_results</source>
+                    <target>Search results for</target>
+            </trans-unit>
+            <trans-unit id="title_authors">
+                    <source>title.authors</source>
+                    <target>Authors</target>
+            </trans-unit>
+            <trans-unit id="title_edit_review">
+                    <source>title.edit_review</source>
+                    <target>Edit Review</target>
+            </trans-unit>
+            <trans-unit id="title_leave_review">
+                    <source>title.leave_review</source>
+                    <target>Leave a Review</target>
+            </trans-unit>
+            <trans-unit id="title_add_genre">
+                    <source>title.add_genre</source>
+                    <target>Add a Genre</target>
+            </trans-unit>
+            <trans-unit id="title_reading_list">
+                    <source>title.reading_list</source>
+                    <target>My Reading List</target>
+            </trans-unit>
+            <trans-unit id="title_add_author">
+                    <source>title.add_author</source>
+                    <target>Add a Author</target>
+            </trans-unit>
+
+            <!-- Text -->
+            <trans-unit id="text_no_books">
+                  <source>text.no_books</source>
+                  <target>No books were found</target>
+            </trans-unit>
+             <trans-unit id="text_view_all">
+                   <source>text.view_all</source>
+                   <target>View All</target>
+             </trans-unit>
+             <trans-unit id="text_update">
+                   <source>text.update</source>
+                   <target>Update</target>
+             </trans-unit>
+             <trans-unit id="text_create">
+                   <source>text.create</source>
+                   <target>Create</target>
+             </trans-unit>
+             <trans-unit id="text_no_search_results">
+                   <source>text.no_search_results</source>
+                   <target>No Search Results Were Found</target>
+             </trans-unit>
+             <trans-unit id="text_no_reviews">
+                   <source>text.no_reviews</source>
+                   <target>There are currently no reviews</target>
+             </trans-unit>
+             <trans-unit id="text_submit">
+                   <source>text.submit</source>
+                   <target>Submit</target>
+             </trans-unit>
+             <trans-unit id="text_sign_in_review">
+                   <source>text.sign_in_review</source>
+                   <target>Sign in to leave a review</target>
+             </trans-unit>
+             <trans-unit id="text_no_genres">
+                   <source>text.no_genres</source>
+                   <target>There are currently no genres</target>
+             </trans-unit>
+             <trans-unit id="text_add_reading_list">
+                   <source>text.add_reading_list</source>
+                   <target>Add to Reading List</target>
+             </trans-unit>
+             <trans-unit id="text_remove_reading_list">
+                   <source>text.remove_reading_list</source>
+                   <target>Remove from Reading List</target>
+             </trans-unit>
+             <trans-unit id="text_no_authors">
+                   <source>text.no_authors</source>
+                   <target>No authors were found</target>
+             </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -1,18 +1,23 @@
 {% extends '::base.html.twig' %}
 
-{% block stylesheets %}
-    {{ parent() }}
-
-    {# load in image upload previewer theme #}
-    <link href="{{ asset('assets/vendor/ssi-uploader/dist/ssi-uploader/styles/ssi-uploader.min.css') }}" rel="stylesheet"/>
-{% endblock %}
-
 {% block content %}
-    <h1>Add a Book</h1>
-    {{ form_start(form, { 'attr': { 'novalidate': 'novalidate' } }) }}
+
+    <h1>
+        {% trans %}title.add_book{% endtrans %}
+    </h1>
+
+    {{ form_start(form) }}
     {{ form_widget(form) }}
-    <input type="submit" value="Create" class="btn--submit">
+        <p>
+            <a href="{{ path('worth_reading_authors_new') }}">Can't find an Author?</a>
+        </p>
+        <p>
+            <a href="{{ path('worth_reading_genres_new') }}">Can't find a Genre?</a>
+        </p>
+
+        <input type="submit" value="{% trans %}text.create{% endtrans %}" class="btn--submit">
     {{ form_end(form) }}
+
 {% endblock %}
 
 {% block javascripts %}

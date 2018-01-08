@@ -1,7 +1,7 @@
 easy_admin_bundle:
   resource: "@EasyAdminBundle/Controller/AdminController.php"
   type:     annotation
-  prefix:   /admin
+  prefix:   /mod
 
 worth_reading:
   path: /
@@ -22,5 +22,10 @@ worth_reading_authors:
   resource: 'config/routing/author_routing.yml'
   prefix: /authors
 
+worth_reading_admin:
+  resource: 'config/routing/admin_routing.yml'
+  prefix: /admin
+
 worth_reading_user:
   resource: 'config/routing/user_routing.yml'
+

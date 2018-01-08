@@ -3,12 +3,17 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Book
  *
  * @ORM\Table(name="books")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\BookRepository")
+ * @Vich\Uploadable
  */
 class Book
 {
@@ -25,6 +30,11 @@ class Book
      * @var string
      *
      * @ORM\Column(name="isbn", type="string", length=255, unique=true)
+     *
+     * @Assert\Isbn(
+     *     type = "isbn13",
+     *     message = "This value is not  valid."
+     * )
      */
     private $isbn;
 
@@ -43,11 +53,18 @@ class Book
     private $summary;
 
     /**
-     * @var string|null
+     * @var string
      *
      * @ORM\Column(name="bookCover", type="string", length=255, nullable=true)
      */
     private $bookCover;
+
+    /**
+     * @Vich\UploadableField(mapping="book_cover", fileNameProperty="bookCover")
+     *
+     * @var File
+     */
+    private $bookCoverFile;
 
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -73,7 +90,7 @@ class Book
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="books")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="userId", referencedColumnName="id")
      */
     private $user;
 
@@ -93,6 +110,13 @@ class Book
      * @var float
      */
     private $avgRating;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
+     */
+    private $updatedAt;
 
     /**
      * Get id.
@@ -426,6 +450,21 @@ class Book
         return $this->isLovedByCurrentUser;
     }
 
+    public function getBookCoverFile() {
+        return $this->bookCoverFile;
+    }
+
+    public function setBookCoverFile(File $image = null)
+    {
+        $this->bookCoverFile = $image;
+
+        $this->bookCover = $image->getFilename();
+
+        if ($image instanceof UploadedFile) {
+            $this->setUpdatedAt(new \DateTime());
+        }
+    }
+
     public function setIsLovedByCurrentUser($isLovedByCurrentUser)
     {
         $this->isLovedByCurrentUser = $isLovedByCurrentUser;
@@ -434,5 +473,29 @@ class Book
     public function __toString()
     {
         return $this->getTitle();
+    }
+
+    /**
+     * Set updatedAt.
+     *
+     * @param \DateTime $updatedAt
+     *
+     * @return Book
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt.
+     *
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
     }
 }

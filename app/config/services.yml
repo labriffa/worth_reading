@@ -29,53 +29,77 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
-    app_bundle.book_repository:
-        class: Doctrine\ORM\Entity\Repository
+    # Repositories
+
+    # book repository
+    AppBundle\Repository\BookRepository:
+        class: AppBundle\Repository\BookRepository
         factory: ['@doctrine.orm.default_entity_manager', getRepository]
         arguments:
           - AppBundle\Entity\Book
 
-    app_bundle.review_repository:
-            class: Doctrine\ORM\Entity\Repository
+    # review repository
+    AppBundle\Repository\ReviewRepository:
+            class: AppBundle\Repository\ReviewRepository
             factory: ['@doctrine.orm.default_entity_manager', getRepository]
             arguments:
               - AppBundle\Entity\Review
 
-    app_bundle.author_repository:
-            class: Doctrine\ORM\Entity\Repository
+    # book repository
+    AppBundle\Repository\UserRepository:
+            class: AppBundle\Repository\UserRepository
             factory: ['@doctrine.orm.default_entity_manager', getRepository]
             arguments:
-              - AppBundle\Entity\Author
+              - AppBundle\Entity\User
 
-    app_bundle.avatar_file_uploader:
-      class: AppBundle\Service\AvatarFileUploader
+    # author repository
+    AppBundle\Repository\AuthorRepository:
+      class: AppBundle\Repository\AuthorRepository
+      factory: ['@doctrine.orm.default_entity_manager', getRepository]
       arguments:
-        $targetDir: '%author_avatars_directory%'
+          - AppBundle\Entity\Author
 
-    app_bundle.signature_file_uploader:
-      class: AppBundle\Service\SignatureFileUploader
-      arguments:
-        $targetDir: '%author_signatures_directory%'
+    # Custom Services
 
-    app_bundle.cover_file_uploader:
-       class: AppBundle\Service\CoverFileUploader
-       arguments:
-          $targetDir: '%book_covers_directory%'
-
+    # book service
     AppBundle\Service\BookService:
-          class: AppBundle\Service\BookService
-          arguments: ['@app_bundle.book_repository', '@doctrine.orm.entity_manager', '@app_bundle.cover_file_uploader']
+        class: AppBundle\Service\BookService
+        arguments: ['@AppBundle\Repository\BookRepository',
+                    '@doctrine.orm.entity_manager',
+                    '@AppBundle\Service\PaginationService',
+                    '@security.token_storage',
+                    '@AppBundle\Service\ReviewService']
 
+    # review service
     AppBundle\Service\ReviewService:
-          class: AppBundle\Service\ReviewService
-          arguments: ['@app_bundle.review_repository', '@doctrine.orm.entity_manager']
+        class: AppBundle\Service\ReviewService
+        arguments: ['@AppBundle\Repository\ReviewRepository', '@doctrine.orm.entity_manager']
+
+    # user service
+    AppBundle\Service\UserService:
+        class: AppBundle\Service\UserService
+        arguments: ['@AppBundle\Repository\UserRepository',
+                    '@doctrine.orm.entity_manager',
+                    '@AppBundle\Service\PaginationService',
+                    '@AppBundle\Service\BookService']
+
+    # pagination service
+    AppBundle\Service\PaginationService:
+        class: AppBundle\Service\PaginationService
+        arguments: ['@knp_paginator', '@request_stack']
 
     AppBundle\Service\AuthorService:
-              class: AppBundle\Service\AuthorService
-              arguments: ['@app_bundle.author_repository', '@doctrine.orm.entity_manager', '@app_bundle.avatar_file_uploader', '@app_bundle.signature_file_uploader']
+          class: AppBundle\Service\AuthorService
+          arguments: ['@AppBundle\Repository\AuthorRepository',
+                      '@doctrine.orm.entity_manager',
+                      '@AppBundle\Service\PaginationService']
 
-    AppBundle\EventListener\PageNotFoundExceptionSubscriber:
-          class: AppBundle\EventListener\PageNotFoundExceptionSubscriber
+
+    # Event Listeners
+
+    # page exception listener
+    AppBundle\EventListener\PageExceptionSubscriber:
+          class: AppBundle\EventListener\PageExceptionSubscriber
           arguments: ['@router']
           tags:
             - { name: kernel.event_subscriber }

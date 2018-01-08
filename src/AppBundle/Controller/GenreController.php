@@ -8,45 +8,44 @@ use AppBundle\Form\GenreType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class GenreController extends Controller
 {
     /**
      * Shows a list of genres
      *
+     * @Template(":genre:index.html.twig")
      * @return Response
      */
-    public function indexAction() : Response
+    public function indexAction() : array
     {
         $genres = $this->getDoctrine()->getRepository(Genre::class)->findAll();
 
-        return $this->render(':genre:index.html.twig', [
-           'genres' => $genres,
-        ]);
+        return ['genres' => $genres];
     }
 
     /**
      * Shows a list of books for the chosen genre
      *
+     * @Template(":genre:single.html.twig")
      * @param Genre $genre
      * @return Response
      */
-    public function showAction(Genre $genre) : Response
+    public function showAction(Genre $genre) : array
     {
         $books = $genre->getBooks();
 
-        return $this->render(':genre:single.html.twig', [
-            'books' => $books,
-            'genre' => $genre,
-        ]);
+        return ['books' => $books, 'genre' => $genre];
     }
 
     /**
      * Creates a new genre
      *
+     * @Template(":genre:new.html.twig")
      * @return Response
      */
-    public function newAction(Request $request) : Response
+    public function newAction(Request $request) : array
     {
         $form = $this->createForm(GenreType::class, new Genre());
 
@@ -58,30 +57,6 @@ class GenreController extends Controller
             $em->flush();
         }
 
-        return $this->render(':genre:new.html.twig', [
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * Edits the chosen genre
-     *
-     * @param Genre $genre
-     * @return Response
-     */
-    public function editAction(Genre $genre) : Response
-    {
-
-    }
-
-    /**
-     * Removes the chosen genre
-     *
-     * @param Genre $genre
-     * @return Response
-     */
-    public function removeGenre(Genre $genre) : Response
-    {
-
+        return ['form' => $form->createView()];
     }
 }
