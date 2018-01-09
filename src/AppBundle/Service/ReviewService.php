@@ -23,9 +23,9 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class ReviewService extends EntityService
 {
-    public function __construct(ReviewRepository $repo, EntityManagerInterface $em)
+    public function __construct(ReviewRepository $repo, EntityManagerInterface $em, PaginationService $pagination)
     {
-        parent::__construct($repo, $em, null);
+        parent::__construct($repo, $em, $pagination);
     }
 
     /**

@@ -61,7 +61,7 @@ class UserService extends EntityService
      */
     public function getBooks(User $user)
     {
-        return $this->paginate($user->getBooks());
+        return $this->paginate($this->bookService->prepareBooks($user->getBooks()));
     }
 
     /**

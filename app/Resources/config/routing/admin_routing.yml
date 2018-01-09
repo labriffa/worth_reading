@@ -6,3 +6,5 @@ worth_reading_admin_change_role:
   path: /change-role/{role}/{userId}
   methods: [POST]
   defaults: { _controller: AppBundle:Admin:changeRole }
+
+

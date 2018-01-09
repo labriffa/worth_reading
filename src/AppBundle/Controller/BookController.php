@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class BookController extends Controller
 {
@@ -25,7 +26,8 @@ class BookController extends Controller
      * Retrieves all books
      *
      * @Template(":book:index.html.twig")
-     * @return Response
+     * @param BookService $bookService
+     * @return array
      */
     public function indexAction(BookService $bookService) : array
     {
@@ -35,6 +37,8 @@ class BookController extends Controller
     }
 
     /**
+     * Retrieves books based on the currently selected filters
+     *
      * @Template(":book:books.html.twig")
      * @param Request $request
      * @param BookService $bookService
@@ -60,7 +64,7 @@ class BookController extends Controller
      *
      * @Template(":book:single.html.twig")
      * @param int $id
-     * @return Response
+     * @return array|Response
      */
     public function showAction(Request $request, Book $book, ReviewService $reviewService) : array
     {
@@ -97,7 +101,8 @@ class BookController extends Controller
      * Creates a new book entry
      *
      * @Template(":book:new.html.twig")
-     * @return Response
+     * @Security("has_role('ROLE_USER')")
+     * @return array|Response
      */
     public function newAction(Request $request, BookService $bookService) : array
     {
@@ -122,8 +127,9 @@ class BookController extends Controller
      * Edits a single book entry
      *
      * @Template(":book:edit.html.twig")
+     * @Security("has_role('ROLE_USER')")
      * @param Book $book
-     * @return Response
+     * @return array
      */
     public function editAction(Request $request, Book $book, BookService $bookService) : array
     {
@@ -146,6 +152,7 @@ class BookController extends Controller
     /**
      * Removes a single book entry
      *
+     * @Security("has_role('ROLE_USER')")
      * @param int $id
      * @return Response
      */
@@ -164,9 +171,11 @@ class BookController extends Controller
 
 
     /**
+     * Retrieves books based on the current search query
+     *
      * @Template(":book:search.html.twig")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return array
      */
     public function searchAction(Request $request, BookService $bookService, AuthorService $authorService) : array
     {

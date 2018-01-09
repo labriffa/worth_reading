@@ -73,7 +73,9 @@ services:
     # review service
     AppBundle\Service\ReviewService:
         class: AppBundle\Service\ReviewService
-        arguments: ['@AppBundle\Repository\ReviewRepository', '@doctrine.orm.entity_manager']
+        arguments: ['@AppBundle\Repository\ReviewRepository',
+                    '@doctrine.orm.entity_manager',
+                    '@AppBundle\Service\PaginationService']
 
     # user service
     AppBundle\Service\UserService:

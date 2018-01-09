@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  *
@@ -24,7 +25,7 @@ class AuthorController extends Controller
      * Shows a list of authors
      *
      * @Template(":author:index.html.twig")
-     * @return Response
+     * @return array
      */
     public function indexAction() : array
     {
@@ -38,7 +39,8 @@ class AuthorController extends Controller
      *
      * @Template(":author:single.html.twig")
      * @param Author $author
-     * @return Response
+     * @param BookService $bookService
+     * @return array
      */
     public function showAction(Author $author, BookService $bookService) : array
     {
@@ -51,7 +53,10 @@ class AuthorController extends Controller
      * Creates a new author
      *
      * @Template(":author:new.html.twig")
-     * @return Response
+     * @Security("has_role('ROLE_USER')")
+     * @param Request $request
+     * @param AuthorService $authorService
+     * @return array
      */
     public function newAction(Request $request, AuthorService $authorService) : array
     {

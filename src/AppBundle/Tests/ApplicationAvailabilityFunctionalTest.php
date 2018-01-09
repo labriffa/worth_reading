@@ -6,10 +6,9 @@
  * Time: 00:24
  */
 
-namespace App\Tests;
+namespace AppBundle\Tests;
 
-
-use Symfony\Bundle\FrameworkBundle\Tests\Functional\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ApplicationAvailabilityFunctionalTest extends WebTestCase
 {
@@ -27,9 +26,12 @@ class ApplicationAvailabilityFunctionalTest extends WebTestCase
     public function urlProvider()
     {
         yield ['/'];
-        yield ['/posts'];
-        yield ['/post/fixture-post-1'];
-        yield ['/blog/category/fixture-category'];
-        yield ['/archives'];
+        yield['/books/'];
+        yield['/books/1'];
+        yield['/books/search?q=/'];
+        yield['/authors/'];
+        yield['/authors/1'];
+        yield['/genres/'];
+        yield['/genres/1'];
     }
 }

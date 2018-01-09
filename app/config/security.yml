@@ -14,7 +14,9 @@ security:
         fos_userbundle:
             id: fos_user.user_provider.username
         in_memory:
-            memory: ~
+            memory:
+                users:
+                    admin: { password: adminpass, roles: ROLE_ADMIN }
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -34,6 +36,5 @@ security:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/wishlist, role: ROLE_USER }
         - { path: ^/mod/, role: ROLE_MODERATOR }
         - { path: ^/admin/, role: ROLE_ADMIN }

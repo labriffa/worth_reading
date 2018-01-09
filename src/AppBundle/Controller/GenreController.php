@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class GenreController extends Controller
 {
@@ -16,7 +17,7 @@ class GenreController extends Controller
      * Shows a list of genres
      *
      * @Template(":genre:index.html.twig")
-     * @return Response
+     * @return array
      */
     public function indexAction() : array
     {
@@ -30,7 +31,7 @@ class GenreController extends Controller
      *
      * @Template(":genre:single.html.twig")
      * @param Genre $genre
-     * @return Response
+     * @return array
      */
     public function showAction(Genre $genre) : array
     {
@@ -43,7 +44,8 @@ class GenreController extends Controller
      * Creates a new genre
      *
      * @Template(":genre:new.html.twig")
-     * @return Response
+     * @Security("has_role('ROLE_USER')")
+     * @return array
      */
     public function newAction(Request $request) : array
     {

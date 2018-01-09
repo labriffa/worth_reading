@@ -52,11 +52,11 @@ class EntityService
     /**
      * Adds pagination functionality to a given collection
      *
-     * @param array $data
+     * @param $data
      * @param string $pageParamKey
      * @return mixed
      */
-    public function paginate(array $data, $pageParamKey=EntityService::DEFAULT_PAGE_PARAM_KEY)
+    public function paginate($data, $pageParamKey=EntityService::DEFAULT_PAGE_PARAM_KEY)
     {
         return $this->pagination->paginate($data, $pageParamKey);
     }
