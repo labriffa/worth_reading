@@ -21,3 +21,7 @@ worth_reading_books_edit:
 worth_reading_books_remove:
   path: /remove/{id}
   defaults: { _controller: AppBundle:Book:remove }
+
+worth_reading_books_remove_review:
+  path: /remove/review/{id}
+  defaults: { _controller: AppBundle:Book:removeReview }

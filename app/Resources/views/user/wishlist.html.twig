@@ -27,6 +27,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-bar-rating/1.2.2/jquery.barrating.min.js"></script>
-    <script src="{{ asset('js/barrating_init.js') }}"></script>
+    <script src="{{ asset('build/js/barrating_init.js') }}"></script>
 {% endblock %}

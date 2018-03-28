@@ -1,0 +1,11 @@
+worth_reading_joindin_events:
+  path: /events
+  defaults: { _controller: AppBundle:Joindin:events }
+
+worth_reading_joindin_events_show:
+  path: /event/{title}
+  defaults: { _controller: AppBundle:Joindin:event }
+
+worth_reading_joindin_talks:
+  path: /talks/{title}
+  defaults: { _controller: AppBundle:Joindin:talks }

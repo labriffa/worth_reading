@@ -1,0 +1,8 @@
+{% if talks | length > 1  %}
+    {% for talk in talks %}
+        <h4>{{ talk.talk_title }}</h4>
+        <p>{{ talk.description }}</p>
+    {% endfor %}
+{% else %}
+    <p>There are no talks for this event</p>
+{% endif %}

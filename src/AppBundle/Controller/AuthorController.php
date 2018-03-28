@@ -14,7 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
- *
+ * Handles the control of author related pages
  *
  * Class AuthorController
  * @package AppBundle\Controller

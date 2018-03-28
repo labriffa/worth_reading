@@ -12,9 +12,15 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@symfony/webpack-encore": "^0.17.1",
     "gulp": "^3.9.1",
     "gulp-sass": "^3.1.0",
     "gulp-uglify": "^3.0.0",
     "gulp-watch": "^4.3.11"
+  },
+  "dependencies": {
+    "chosen": "0.0.2",
+    "chosen-npm": "^1.4.2",
+    "jquery-bar-rating": "file:jquery-bar-rating"
   }
 }

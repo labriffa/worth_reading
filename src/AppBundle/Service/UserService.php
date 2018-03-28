@@ -90,14 +90,10 @@ class UserService extends EntityService
      */
     public function removeFromWishlist(int $id, User $user)
     {
-        // check if this user actually has this book
-        if(!($this->isInWishlist($id, $user)))
-        {
-            $book = $this->bookService->getBook($id);
-            $user->removeWishlist($book);
-            $this->getEm()->persist($user);
-            $this->getEm()->flush();
-        }
+        $book = $this->bookService->getBook($id);
+        $user->removeWishlist($book);
+        $this->getEm()->persist($user);
+        $this->getEm()->flush();
     }
 
     /**

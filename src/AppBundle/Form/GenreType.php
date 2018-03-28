@@ -30,7 +30,8 @@ class GenreType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Genre'
+            'data_class' => 'AppBundle\Entity\Genre',
+            'csrf_protection' => false
         ));
     }
 

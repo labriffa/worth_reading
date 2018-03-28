@@ -11,6 +11,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
+/**
+ * Handles the control of genre related pages
+ *
+ * Class GenreController
+ * @package AppBundle\Controller
+ */
 class GenreController extends Controller
 {
     /**

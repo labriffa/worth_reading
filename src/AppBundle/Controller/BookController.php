@@ -18,6 +18,12 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
+/**
+ * Handles the control of book related pages
+ *
+ * Class BookController
+ * @package AppBundle\Controller
+ */
 class BookController extends Controller
 {
      const BOOKS_PER_PAGE = 6;
@@ -63,10 +69,12 @@ class BookController extends Controller
      * Retrieves a single book entry
      *
      * @Template(":book:single.html.twig")
-     * @param int $id
-     * @return array|Response
+     * @param Request $request
+     * @param Book $book
+     * @param ReviewService $reviewService
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function showAction(Request $request, Book $book, ReviewService $reviewService) : array
+    public function showAction(Request $request, Book $book, ReviewService $reviewService)
     {
         // get user
         $user = $this->getUser();
@@ -102,9 +110,8 @@ class BookController extends Controller
      *
      * @Template(":book:new.html.twig")
      * @Security("has_role('ROLE_USER')")
-     * @return array|Response
      */
-    public function newAction(Request $request, BookService $bookService) : array
+    public function newAction(Request $request, BookService $bookService)
     {
         $book = new Book();
         $form = $this->createForm(BookType::class, $book);
@@ -153,7 +160,7 @@ class BookController extends Controller
      * Removes a single book entry
      *
      * @Security("has_role('ROLE_USER')")
-     * @param int $id
+     * @param Book $book
      * @return Response
      */
     public function removeAction(Book $book) : Response
@@ -167,6 +174,26 @@ class BookController extends Controller
         $em->flush();
 
         return $this->redirectToRoute('worth_reading_user_my_books');
+    }
+
+    /**
+     * Removes a given review
+     *
+     * @param Review $review
+     */
+    public function removeReviewAction(Review $review)
+    {
+        $user = $this->getUser();
+
+        if(!$user || $user !== $review->getUser()) {
+            return $this->redirectToRoute('worth_reading');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($review);
+        $em->flush();
+
+        return $this->redirectToRoute('worth_reading');
     }
 
 

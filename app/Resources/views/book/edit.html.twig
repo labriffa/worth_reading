@@ -18,9 +18,8 @@
     {{ parent() }}
 
     {# load in multiselect dropdown ui with search  #}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.2/chosen.jquery.min.js"></script>
-    <script src="{{ asset('js/chosen_init.js') }}"></script>
+    <script src="{{ asset('build/js/chosen_init.js') }}"></script>
 
     {# load in image upload previewer #}
-    <script src="{{ asset('js/ssi_init.js') }}"></script>
+    <script src="{{ asset('build/js/ssi_init.js') }}"></script>
 {% endblock %}

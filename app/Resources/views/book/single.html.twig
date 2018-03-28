@@ -96,13 +96,13 @@
                 </p>
             {% endif %}
 
-            {% for review in book.reviews %}
+            {% for review_item in book.reviews %}
                 <div class="review">
                     <div class="review__title">
-                        <h3>{{ review.title }}</h3>
+                        <h3>{{ review_item.title }}</h3>
                     </div>
                     <div class="review__stars">
-                        <select name="" class="review-rating" id="num" data-rating="{{ review.rating }}">
+                        <select name="" class="review-rating" id="num" data-rating="{{ review_item.rating }}">
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -111,11 +111,14 @@
                         </select>
                     </div>
                     <div class="review__author">
-                        by {{ review.user.username }}
+                        by {{ review_item.user.username }}
                     </div>
                     <div class="review__text">
-                        {{ review.text }}
+                        {{ review_item.text }}
                     </div>
+                    {% if review and review.id == review_item.id  %}
+                        <a href="{{ path('worth_reading_books_remove_review', { 'id': review.id }) }}">Remove review</a>
+                    {% endif %}
                 </div>
             {% endfor %}
 
@@ -157,6 +160,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-bar-rating/1.2.2/jquery.barrating.min.js"></script>
-    <script src="{{ asset('js/barrating_init.js') }}"></script>
+    <script src="{{ asset('build/js/barrating_init.js') }}"></script>
 {% endblock %}

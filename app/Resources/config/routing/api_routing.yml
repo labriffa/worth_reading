@@ -1,0 +1,5 @@
+worth_reading_api_book:
+  type: rest
+  resource: AppBundle\Controller\ApiController
+  name_prefix: worth_reading_api_
+  prefix: /

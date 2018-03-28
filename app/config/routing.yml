@@ -29,3 +29,11 @@ worth_reading_admin:
 worth_reading_user:
   resource: 'config/routing/user_routing.yml'
 
+worth_reading_api:
+  type: rest
+  resource: 'config/routing/api_routing.yml'
+  prefix: /api/v1
+
+worth_reading_joindin:
+  resource: 'config/routing/joindin_routing.yml'
+  prefix: /joindin

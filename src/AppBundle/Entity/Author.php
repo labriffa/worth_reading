@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use JMS\Serializer\Annotation\ Exclude;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * Author
@@ -44,12 +46,14 @@ class Author
      * @Vich\UploadableField(mapping="author_avatar", fileNameProperty="avatar")
      *
      * @var File
+     * @Exclude
      */
     private $avatarFile;
 
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\ManyToMany(targetEntity="Book", mappedBy="authors")
+     * @Exclude
      */
     private $books;
 
@@ -64,6 +68,7 @@ class Author
      * @Vich\UploadableField(mapping="author_signature", fileNameProperty="signature")
      *
      * @var File
+     * @Exclude
      */
     private $signatureFile;
 

@@ -8,6 +8,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
+/**
+ * Handles the control of user related pages
+ *
+ * Class UserController
+ * @package AppBundle\Controller
+ */
 class UserController extends Controller
 {
     /**
@@ -47,7 +53,7 @@ class UserController extends Controller
      * @param UserService $userService
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function removeFromWishlistAction(int $id, UserService $userService)
+    public function removeFromWishlistAction(int $id, UserService $userService) : Response
     {
         $userService->removeFromWishlist($id, $this->getUser());
 

@@ -13,11 +13,12 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
+ * Provides handling for HTTP exceptions
+ *
  * User: lewisbriffa
  * Date: 26/12/2017
  * Time: 17:51
  */
-
 class PageExceptionSubscriber implements EventSubscriberInterface
 {
 

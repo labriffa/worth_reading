@@ -10,4 +10,21 @@ namespace AppBundle\Repository;
  */
 class GenreRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * Searches for genres by on a given name
+     *
+     * @param string $query
+     * @return \Doctrine\ORM\Query
+     */
+    public function searchTitle(string $query)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('g')
+            ->from('AppBundle:Genre', 'g')
+            ->where('g.name LIKE ?1')
+            ->setParameter('1', '%'.$query.'%')
+            ->getQuery();
+
+        return $qb;
+    }
 }
