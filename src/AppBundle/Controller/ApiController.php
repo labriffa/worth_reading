@@ -3,24 +3,31 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Genre;
 use AppBundle\Form\GenreType;
-use FOS\RestBundle\Controller\FOSRestController;
-use AppBundle\Entity\Book;
-use Illuminate\Http\Response;
+use Hateoas\Configuration\Route;
+use Hateoas\Representation\Factory\PagerfantaFactory;
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-class ApiController extends FOSRestController {
+class ApiController extends BaseApiController {
 
     // -=-=-=-=-=-=-=-= GENRES -=-=-=-=-=-=-=-= //
-
     /**
      * Retrieve all genres
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     * @return Response
      */
-    public function getGenresAction()
+    public function getGenresAction(Request $request)
     {
         $genres = $this->getDoctrine()->getRepository(Genre::class)->findAll();
-        return $this->handleView($this->view($genres));
+
+        return $this->paginatedResponse(
+            $request,
+            $genres,
+            'worth_reading_api_get_genres'
+        );
     }
 
     /**
@@ -32,10 +39,12 @@ class ApiController extends FOSRestController {
     public function getGenreAction(Genre $genre)
     {
         if(!$genre) {
-            return $this->handleView($this->view("Genre ID does not exist", 400));
+            return $this->createApiResponse(
+                "Requested genre does not exit",
+                Response::HTTP_BAD_REQUEST);
         }
 
-        return $this->handleView($this->view($genre, 200));
+        return $this->createApiResponse($genre);
     }
 
     /**
@@ -51,7 +60,10 @@ class ApiController extends FOSRestController {
 
         // check if the content type matches the expected json
         if($request->getContentType() != 'json') {
-            return $this->handleView($this->view(null, 400));
+            return $this->createApiResponse(
+                "Invalid JSON",
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
         // submit the form
@@ -65,13 +77,13 @@ class ApiController extends FOSRestController {
             $em->flush();
 
             // set the header to point to the new resource
-            return $this->handleView($this->view(null, 201)
+            return $this->handleView($this->view(null, Response::HTTP_CREATED)
                 ->setLocation($this->generateUrl('worth_reading_api_get_genre', [
                     'id' => $genre->getId()
                 ])));
 
         } else {
-            return $this->handleView($this->view($form , 400));
+            return $this->handleView($this->view($form , Response::HTTP_BAD_REQUEST));
         }
     }
 
@@ -86,14 +98,14 @@ class ApiController extends FOSRestController {
     {
         // Check if this genre exists
         if(!$genre) {
-            return $this->handleView($this->view(null, 404));
+            return $this->createApiResponse(null, Response::HTTP_BAD_REQUEST);
         } else {
             // create the form
             $form = $this->createForm(GenreType::class, $genre);
 
             // check if the content type matches the expected json
             if($request->getContentType() != 'json') {
-                return $this->handleView($this->view(null, 404));
+                return $this->createApiResponse(null, Response::HTTP_BAD_REQUEST);
             }
 
             // submit the form
@@ -101,6 +113,7 @@ class ApiController extends FOSRestController {
 
             // check if the form is valid
             if($form->isValid()) {
+
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($genre);
                 $em->flush();
@@ -112,28 +125,28 @@ class ApiController extends FOSRestController {
                     ])));
 
             } else {
-                return $this->handleView($this->view($form , 400));
+                return $this->createApiResponse($form, Response::HTTP_BAD_REQUEST);
             }
         }
     }
 
     /**
-     * Delete the given genre
+     * Delete a given genre
      *
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Genre $genre
+     * @return Response
      */
     public function deleteGenreAction(Genre $genre)
     {
         if (!$genre) {
-            return $this->handleView($this->view(null, 404));
+            return $this->createApiResponse(null, Response::HTTP_BAD_REQUEST);
         }
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($genre);
         $em->flush();
 
-        return $this->handleView($this->view(null, 200));
+        return $this->createApiResponse(null, Response::HTTP_NO_CONTENT);
     }
 }
 
