@@ -49,6 +49,7 @@ abstract class BaseApiController extends FOSRestController
         // get query parameters
         $limit = $request->query->getInt('limit', BaseApiController::DEFAULT_PAGE_LIMIT);
         $page = $request->query->getInt('page', BaseApiController::DEFAULT_PAGE_NO);
+        $sorting = $request->query->get('sorting', array());
 
         // create pager adapter
         $pagerAdapter = new ArrayAdapter($arr);
@@ -62,7 +63,10 @@ abstract class BaseApiController extends FOSRestController
         $pagerFactory = new PagerfantaFactory();
         return $this->handleView($this->view($pageRepresentation = $pagerFactory->createRepresentation(
             $pager,
-            new Route($route, ['limit'=>$limit, 'page'=>$page])
+            new Route($route, [
+                'limit' => $limit,
+                'page' => $page
+            ])
         )));
     }
 }
