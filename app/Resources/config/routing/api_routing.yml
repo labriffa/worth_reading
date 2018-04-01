@@ -1,5 +1,11 @@
-worth_reading_api_book:
+worth_reading_api_genres:
   type: rest
-  resource: AppBundle\Controller\ApiController
+  resource: AppBundle\Controller\Api\GenreApiController
+  name_prefix: worth_reading_api_
+  prefix: /
+
+worth_reading_api_authors:
+  type: rest
+  resource: AppBundle\Controller\Api\AuthorApiController
   name_prefix: worth_reading_api_
   prefix: /

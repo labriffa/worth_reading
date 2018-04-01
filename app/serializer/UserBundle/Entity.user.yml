@@ -1,0 +1,5 @@
+Blogger\UserBundle\Entity\User:
+  exclusion_policy: ALL
+  properties :
+      entries :
+        expose : false

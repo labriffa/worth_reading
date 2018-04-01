@@ -14,7 +14,7 @@
         </header>
     {% endblock %}
 
-    {# page title #}
+     page title
     <h1 class="float-left">
         {% trans %}title.recently_added{% endtrans %}
     </h1>
@@ -23,7 +23,7 @@
         {% trans %}text.view_all{% endtrans %}
     </a>
 
-    {# main book loop #}
+     main book loop
     {% if books %}
 
         {% include '::book-grid.html.twig' with { 'books' : books } %}

@@ -26,6 +26,10 @@ class AuthorService extends EntityService
         parent::__construct($repo, $em, $pageService);
     }
 
+    public function getAll() {
+        $this->getRepo()->findAll();
+    }
+
     /**
      * Adds a given author
      *

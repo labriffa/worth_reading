@@ -6,7 +6,7 @@
  * Time: 19:14
  */
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Api;
 
 
 use FOS\RestBundle\Controller\FOSRestController;
@@ -14,6 +14,7 @@ use Hateoas\Configuration\Route;
 use Hateoas\Representation\Factory\PagerfantaFactory;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class BaseApiController extends FOSRestController
@@ -68,5 +69,17 @@ abstract class BaseApiController extends FOSRestController
                 'page' => $page
             ])
         )));
+    }
+
+    protected function convertBase64Image($path, $base64)
+    {
+        $filename = md5(uniqid());
+        $fh = fopen( $path . '/' . $filename, "wb" );
+        fwrite($fh, base64_decode($base64));
+        fclose($fh);
+
+        $file = new UploadedFile($path . '/' . $filename, $filename, "image/png", null, null, true);
+
+        return $file;
     }
 }

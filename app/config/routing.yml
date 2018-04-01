@@ -34,6 +34,7 @@ worth_reading_api:
   resource: 'config/routing/api_routing.yml'
   prefix: /api/v1
 
-worth_reading_joindin:
-  resource: 'config/routing/joindin_routing.yml'
-  prefix: /joindin
+worth_reading_api_swagger_ui:
+    path: api/v1/doc
+    methods: GET
+    defaults: { _controller: nelmio_api_doc.controller.swagger_ui }

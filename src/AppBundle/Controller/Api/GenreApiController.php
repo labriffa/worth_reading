@@ -10,9 +10,7 @@ use Nelmio\ApiDocBundle\Annotation\Security;
 use Swagger\Annotations as SWG;
 
 
-class ApiController extends BaseApiController {
-
-    // -=-=-=-=-=-=-=-= GENRES -=-=-=-=-=-=-=-= //
+class GenreApiController extends BaseApiController {
 
     /**
      * List genres
@@ -63,7 +61,7 @@ class ApiController extends BaseApiController {
      *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns a paginated collection of genres",
+     *     description="Returns the genre associated with the requested id",
      *     @SWG\Schema(
      *         type="array",
      *         @Model(type=Genre::class),
@@ -73,18 +71,6 @@ class ApiController extends BaseApiController {
      *              @SWG\Property(property="name", type="string", example="Horror")
      *          )
      *     )
-     * )
-     * @SWG\Parameter(
-     *     name="limit",
-     *     in="query",
-     *     type="string",
-     *     description="The field used to determine the number of genres returned"
-     * )
-     * @SWG\Parameter(
-     *     name="page",
-     *     in="query",
-     *     type="string",
-     *     description="The field used to resolve the requested page"
      * )
      * @SWG\Parameter(
      *     name="id",

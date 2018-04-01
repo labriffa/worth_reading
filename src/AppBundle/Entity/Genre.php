@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
+use Swagger\Annotations as SWG;
 
 /**
  * Genre
@@ -19,6 +20,7 @@ class Genre
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @SWG\Property(description="The unique identifier of the genre.")
      */
     private $id;
 
@@ -26,6 +28,7 @@ class Genre
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
+     * @SWG\Property(description="The unique identifier of the genre.")
      */
     private $name;
 
