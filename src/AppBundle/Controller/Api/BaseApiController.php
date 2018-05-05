@@ -45,8 +45,9 @@ abstract class BaseApiController extends FOSRestController
      * @param $route
      * @return Response
      */
-    protected function paginatedResponse($request, $arr, $route)
+    protected function paginatedResponse($request, $arr, $route_name, $id=null)
     {
+
         // get query parameters
         $limit = $request->query->getInt('limit', BaseApiController::DEFAULT_PAGE_LIMIT);
         $page = $request->query->getInt('page', BaseApiController::DEFAULT_PAGE_NO);
@@ -60,15 +61,21 @@ abstract class BaseApiController extends FOSRestController
         $pager->setCurrentPage($page);
         $pager->setMaxPerPage($limit);
 
-        // create and handle page representation
+        // create factory
         $pagerFactory = new PagerfantaFactory();
-        return $this->handleView($this->view($pageRepresentation = $pagerFactory->createRepresentation(
-            $pager,
-            new Route($route, [
-                'limit' => $limit,
-                'page' => $page
-            ])
-        )));
+
+        // create route params array
+        $route_params = ['page' => $page, 'limit' => $limit];
+
+        // check for optional parameters
+        if($id) {
+            $route_params["id"] = $id;
+        }
+
+        // create and handle page representation
+        $paginatedCollection = $pagerFactory->createRepresentation($pager, new Route($route_name, $route_params));
+
+        return $this->handleView($this->view($paginatedCollection));
     }
 
     protected function convertBase64Image($path, $base64)

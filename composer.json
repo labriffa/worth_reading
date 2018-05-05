@@ -23,6 +23,7 @@
         "php": ">=7.0.23",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "^2.5",
+        "friendsofsymfony/oauth-server-bundle": "^1.5",
         "friendsofsymfony/rest-bundle": "^2.3",
         "friendsofsymfony/user-bundle": "^2.0",
         "guzzlehttp/guzzle": "^6.3",

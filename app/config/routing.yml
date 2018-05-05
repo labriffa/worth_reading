@@ -38,3 +38,6 @@ worth_reading_api_swagger_ui:
     path: api/v1/doc
     methods: GET
     defaults: { _controller: nelmio_api_doc.controller.swagger_ui }
+
+fos_oauth_server_token:
+    resource: "@FOSOAuthServerBundle/Resources/config/routing/token.xml"

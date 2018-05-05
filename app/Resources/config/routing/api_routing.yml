@@ -1,11 +1,26 @@
-worth_reading_api_genres:
+worth_reading_api_books:
   type: rest
-  resource: AppBundle\Controller\Api\GenreApiController
+  resource: AppBundle\Controller\Api\BookApiController
   name_prefix: worth_reading_api_
-  prefix: /
+
+worth_reading_api_reviews:
+  type: rest
+  resource: AppBundle\Controller\Api\ReviewApiController
+  name_prefix: worth_reading_api_
 
 worth_reading_api_authors:
   type: rest
   resource: AppBundle\Controller\Api\AuthorApiController
   name_prefix: worth_reading_api_
-  prefix: /
+  path: /books/{id}/reviews
+
+worth_reading_api_genres:
+  type: rest
+  resource: AppBundle\Controller\Api\GenreApiController
+  name_prefix: worth_reading_api_
+
+worth_reading_api_users:
+  type: rest
+  resource: AppBundle\Controller\Api\UserApiController
+  name_prefix: worth_reading_api_
+

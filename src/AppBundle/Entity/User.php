@@ -4,7 +4,7 @@ namespace AppBundle\Entity;
 
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
-
+use JMS\Serializer\Annotation\ Exclude;
 /**
  * User
  *
@@ -26,6 +26,7 @@ class User extends BaseUser
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Review", mappedBy="user")
+     * @Exclude
      */
     private $reviews;
 
@@ -33,6 +34,7 @@ class User extends BaseUser
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Book", mappedBy="user")
+     * @Exclude
      */
     private $books;
 
@@ -42,6 +44,7 @@ class User extends BaseUser
      * @ORM\ManyToMany(targetEntity="Book", inversedBy="lovedBy")
      * @ORM\JoinTable(name="wishlist")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @Exclude
      */
     private $wishlist;
 

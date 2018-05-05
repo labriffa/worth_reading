@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation\ Exclude;
 
 /**
  * Book
@@ -14,6 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="books")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\BookRepository")
  * @Vich\Uploadable
+ *
  */
 class Book
 {
@@ -63,6 +65,7 @@ class Book
      * @Vich\UploadableField(mapping="book_cover", fileNameProperty="bookCover")
      *
      * @var File
+     * @Exclude
      */
     private $bookCoverFile;
 
@@ -70,6 +73,7 @@ class Book
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\ManyToMany(targetEntity="Author", inversedBy="books")
      * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
+     * @Exclude
      */
     private $authors;
 
@@ -77,12 +81,14 @@ class Book
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\ManyToMany(targetEntity="Genre", inversedBy="books")
      * @ORM\JoinColumn(name="genre_id", referencedColumnName="id")
+     * @Exclude
      */
     private $genres;
 
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\OneToMany(targetEntity="Review", mappedBy="book")
+     * @Exclude
      */
     private $reviews;
 
@@ -91,6 +97,7 @@ class Book
      *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="books")
      * @ORM\JoinColumn(name="userId", referencedColumnName="id")
+     * @Exclude
      */
     private $user;
 
@@ -98,6 +105,7 @@ class Book
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="User", mappedBy="wishlist")
+     * @Exclude
      */
     private $lovedBy;
 
@@ -115,6 +123,7 @@ class Book
      * @var \DateTime
      *
      * @ORM\Column(name="updatedAt", type="datetime", nullable=true)
+     * @Exclude
      */
     private $updatedAt;
 
@@ -253,13 +262,13 @@ class Book
     }
 
     /**
-     * Get author.
+     * Get Authors
      *
-     * @return \AppBundle\Entity\Author|null
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getAuthor()
     {
-        return $this->author;
+        return $this->authors;
     }
     /**
      * Constructor
@@ -375,6 +384,16 @@ class Book
     public function getReviews()
     {
         return $this->reviews;
+    }
+
+    /**
+     * Gets an array representation of reviews
+     *
+     * @return array
+     */
+    public function getReviewsArray()
+    {
+        return $this->reviews->getValues();
     }
 
     /**

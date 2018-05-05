@@ -132,3 +132,24 @@ nelmio_api_doc:
     areas:
         path_patterns:
             - ^/api/v1(?!/doc$)
+
+# JMS Serializer
+jms_serializer:
+  metadata:
+    directories:
+      FOSUB:
+        namespace_prefix: "FOS\\UserBundle"
+        path: "%kernel.root_dir%/serializer/FOSUserBundle"
+#      UB:
+#        namespace_prefix: "AppBundle"
+#        path: "%kernel.root_dir%/serializer/UserBundle"
+
+# Fos OAuth
+fos_oauth_server:
+  db_driver: orm
+  client_class: AppBundle\Entity\Api\Client
+  access_token_class: AppBundle\Entity\Api\AccessToken
+  refresh_token_class: AppBundle\Entity\Api\RefreshToken
+  auth_code_class: AppBundle\Entity\Api\AuthCode
+  service:
+    user_provider: fos_user.user_provider.username
