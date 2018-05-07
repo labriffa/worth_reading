@@ -5,9 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
 use Swagger\Annotations as SWG;
+use Hateoas\Configuration\Annotation as Hateoas;
 
 /**
  * Genre
+ *
+ * @Hateoas\Relation("self", href = "expr('/api/v1/books/' ~ object.name)")r
  *
  * @ORM\Table(name="genres")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\GenreRepository")

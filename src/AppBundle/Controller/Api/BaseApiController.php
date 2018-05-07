@@ -12,6 +12,7 @@ namespace AppBundle\Controller\Api;
 use FOS\RestBundle\Controller\FOSRestController;
 use Hateoas\Configuration\Route;
 use Hateoas\Representation\Factory\PagerfantaFactory;
+use JMS\Serializer\SerializationContext;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -22,15 +23,15 @@ abstract class BaseApiController extends FOSRestController
     const DEFAULT_PAGE_LIMIT = 10;
     const DEFAULT_PAGE_NO = 1;
 
-    protected function serialize($data, $format = 'json')
+    protected function serialize($data, $format = 'json', $groups=['default'])
     {
         return $this->container->get('jms_serializer')
-            ->serialize($data, $format);
+            ->serialize($data, $format, SerializationContext::create()->setGroups($groups));
     }
 
-    protected function createApiResponse($data, $statusCode = 200)
+    protected function createApiResponse($data, $statusCode = 200, $groups=['default'])
     {
-        $json = $this->serialize($data);
+        $json = $this->serialize($data, $groups);
 
         return new Response($json, $statusCode, array(
             'Content-Type' => 'application/json'
@@ -60,6 +61,11 @@ abstract class BaseApiController extends FOSRestController
         // set limits
         $pager->setCurrentPage($page);
         $pager->setMaxPerPage($limit);
+
+        $data = array();
+        foreach($pager->getCurrentPageResults() as $element) {
+            $datap[] = $element;
+        }
 
         // create factory
         $pagerFactory = new PagerfantaFactory();

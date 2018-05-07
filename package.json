@@ -21,6 +21,7 @@
   "dependencies": {
     "chosen": "0.0.2",
     "chosen-npm": "^1.4.2",
-    "jquery-bar-rating": "file:jquery-bar-rating"
+    "jquery-bar-rating": "file:jquery-bar-rating",
+    "yarn": "^1.6.0"
   }
 }

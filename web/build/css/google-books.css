@@ -1,0 +1,95 @@
+.google-books-container {
+    border-top: 1px solid #d1d1d1;
+    float: left;
+    margin: 0px 0;
+    clear: both;
+    margin-bottom: 50px;
+    width: 100%;
+}
+
+.google-books-meta-table {
+    text-align: left;
+}
+
+.google-books-meta-table th,
+.google-books-meta-table td {
+    padding-right: 30px;
+    padding-top: 20px;
+}
+
+.google-books-logo {
+    max-width: 120px;
+    position: relative;
+    top: 20px;
+    margin-left: 10px;
+    display: inline-block;
+}
+
+.google-books {
+    float: left;
+    margin-right: 50px;
+}
+
+.powered-by {
+    display: inline-block;
+    float: right;
+    position: relative;
+    top: -20px;
+}
+
+.google-books-wrapper h2 {
+    font-size: 20px !important;
+    width: 50% !important;
+    display: inline;
+    margin-bottom: 0 !important;
+}
+
+.google-books-wrapper {
+    overflow: hidden;
+    float: left;
+    margin-top: 50px;
+    width: 100%;
+}
+
+.google-book-populate-btn {
+    font-size: 14px;
+    background: none;
+    border: none;
+
+    white-space: normal;
+    text-align: left;
+}
+
+.google-book-search-item {
+    float: left;
+    margin-right: 50px;
+    width: 140px;
+    margin-top: 50px;
+    padding: 5px;
+}
+
+.google-book-search-item:hover {
+    background: #efefef;
+    cursor: pointer;
+}
+
+.google-book-search-item img {
+    object-fit: cover;
+    height: 200px;
+    max-width: 140px;
+}
+
+.google-book-search-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.google-book-search-wrapper form {
+    margin-top: 20px !important;
+}
+
+.google-book-search-item .isbn {
+    color: #7a869d;
+    font-size:13px;
+}

@@ -33,8 +33,11 @@ class ReviewApiController extends BaseApiController
      *         @Model(type=Review::class),
      *         @SWG\Items(
      *              type="object",
-     *              @SWG\Property(property="id", type="integer", example="1"),
-     *              @SWG\Property(property="name", type="string", example="Horror")
+     *              @SWG\Property(property="id", type="id", example="1"),
+     *              @SWG\Property(property="title", type="string", example="Not one of the best"),
+     *              @SWG\Property(property="text", type="string", example="I can't say I was particularly enthralled, too many plotholes."),
+     *              @SWG\Property(property="rating", type="integer", example="3"),
+     *              @SWG\Property(property="timestamp", type="datetime", example="2017-12-25T00:00:00+00:00")
      *          )
      *     )
      * )
@@ -49,6 +52,12 @@ class ReviewApiController extends BaseApiController
      *     in="query",
      *     type="string",
      *     description="The field used to resolve the requested page"
+     * )
+     * @SWG\Parameter(
+     *     name="id",
+     *     in="path",
+     *     type="integer",
+     *     description="The unique identifier of the requested book"
      * )
      * @SWG\Tag(name="books")
      * @Security(name="Bearer")

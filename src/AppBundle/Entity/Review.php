@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ Exclude;
 
 /**
  * Review
@@ -54,6 +55,7 @@ class Review
      *
      * @ORM\ManyToOne(targetEntity="Book", inversedBy="reviews")
      * @ORM\JoinColumn(name="book_id", referencedColumnName="id")
+     * @Exclude
      */
     private $book;
 
@@ -62,6 +64,7 @@ class Review
      *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="reviews")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @Exclude
      */
     private $user;
 

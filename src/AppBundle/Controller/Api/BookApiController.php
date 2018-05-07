@@ -28,32 +28,46 @@ class BookApiController extends BaseApiController
     /**
      * List books
      *
-     * This call returns a collection of genres as a paginated response
+     * Gets book details over a paginated collection
      *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns a paginated collection of genres",
-     *     @SWG\Schema(
-     *         type="array",
-     *         @Model(type=Book::class),
-     *         @SWG\Items(
-     *              type="object",
-     *              @SWG\Property(property="id", type="integer", example="1"),
-     *              @SWG\Property(property="name", type="string", example="Horror")
-     *          )
-     *     )
+     *     description="Returns a paginated collection of books",
+     *     examples={
+     *          "": {
+     *                  { "id": 1, "isbn": "9780450031069", "title": "Salem's Lot", "summary": "Thousands of miles away from the small township of 'Salem's Lot..." },
+     *                  { "id": 2, "isbn": "9780450040184", "title": "The Shining", "summary": "Jack Torrance's new job at the Overlook Hotel is the perfect..." }
+     *              },
+     *          "Pagination Links": {
+     *              "self": {
+     *                  "href": "/api/v1/books?page=1&limit=10"
+     *              },
+     *                  "first": {
+     *                      "href": "/api/v1/books?page=1&limit=10"
+     *              },
+     *                  "last": {
+     *                      "href": "/api/v1/books?page=2&limit=10"
+     *              },
+     *                  "next": {
+     *                      "href": "/api/v1/books?page=2&limit=10"
+     *              }
+     *          }
+     *     }
      * )
      * @SWG\Parameter(
      *     name="limit",
      *     in="query",
-     *     type="string",
-     *     description="The field used to determine the number of genres returned"
+     *     type="integer",
+     *     default=10,
+     *     required=false,
+     *     description="The number of books to return"
      * )
      * @SWG\Parameter(
      *     name="page",
      *     in="query",
-     *     type="string",
-     *     description="The field used to resolve the requested page"
+     *     type="integer",
+     *     default=1,
+     *     description="The page index of the paginated response"
      * )
      * @SWG\Tag(name="books")
      * @Security(name="Bearer")
@@ -72,33 +86,33 @@ class BookApiController extends BaseApiController
     /**
      * Retrieve a book
      *
-     * This call returns a collection of genres as a paginated response
+     * Gets the details of an individual book
      *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns a paginated collection of genres",
-     *     @SWG\Schema(
-     *         type="array",
-     *         @Model(type=Book::class),
-     *         @SWG\Items(
-     *              type="object",
-     *              @SWG\Property(property="id", type="integer", example="1"),
-     *              @SWG\Property(property="name", type="string", example="Horror")
-     *          )
-     *     )
+     *     description="Returns the details of a book associated with the requested ID",
+     *     examples={
+     *          "": {
+     *                  { "id": 9, "isbn": "9780450040184", "title":"Fantastic Beasts and Where to Find Them", "summary": "When Magizoologist Newt Scamander arrives in New York, he intends...", "book_cover": "5f8e3b28be356a1cb2fbe453ef98f974" }
+     *              }
+     *     },
+     * ),
+     * @SWG\Response(
+     *     response=404,
+     *     description="ID not found or invalid",
+     *     examples={
+     *          "": {
+     *                  { "error": { "message": "The requested book with the provided id could not be found" } }
+     *              }
+     *     }
      * )
      * @SWG\Parameter(
-     *     name="limit",
-     *     in="query",
-     *     type="string",
-     *     description="The field used to determine the number of genres returned"
+     *     name="id",
+     *     in="path",
+     *     type="integer",
+     *     description="The unique identifier of the requested book"
      * )
-     * @SWG\Parameter(
-     *     name="page",
-     *     in="query",
-     *     type="string",
-     *     description="The field used to resolve the requested page"
-     * )
+     *
      * @SWG\Tag(name="books")
      * @Security(name="Bearer")
      */
@@ -116,11 +130,37 @@ class BookApiController extends BaseApiController
     /**
      * Create a book
      *
+     * /**
+     * Delete a book
+     *
+     * Deletes an individual book entry corresponding to a given ID
+     *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns a paginated collection of genres",
+     *     description="Returns a success message on successful deletion",
+     *     examples={
+     *          "": {
+     *                  { "success": { "message": "The book with an id of 9 was deleted" } }
+     *              }
+     *     }
+     * ),
+     * @SWG\Response(
+     *     response=409,
+     *     description="ID not found or invalid",
+     *     examples={
+     *          "": {
+     *                  { "error": { "message": "The requested book with the provided id could not be found" } }
+     *              }
+     *     }
      * )
-     * @SWG\Tag(name="genres")
+     * @SWG\Parameter(
+     *     name="id",
+     *     in="path",
+     *     type="integer",
+     *     description="The unique identifier of the book to delete",
+     * )
+     *
+     * @SWG\Tag(name="books")
      * @Security(name="Bearer")
      *
      * @param Request $request
@@ -191,36 +231,33 @@ class BookApiController extends BaseApiController
     /**
      * Delete a book
      *
-     * /**
-     * Retrieve a book
-     *
-     * This call returns a collection of genres as a paginated response
+     * Deletes an individual book entry corresponding to a given ID
      *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns a paginated collection of genres",
-     *     @SWG\Schema(
-     *         type="array",
-     *         @Model(type=Book::class),
-     *         @SWG\Items(
-     *              type="object",
-     *              @SWG\Property(property="id", type="integer", example="1"),
-     *              @SWG\Property(property="name", type="string", example="Horror")
-     *          )
-     *     )
+     *     description="Returns a success message on successful deletion",
+     *     examples={
+     *          "": {
+     *                  { "success": { "message": "The book with an id of 9 was deleted" } }
+     *              }
+     *     }
+     * ),
+     * @SWG\Response(
+     *     response=404,
+     *     description="ID not found or invalid",
+     *     examples={
+     *          "": {
+     *                  { "error": { "message": "The requested book with the provided id could not be found" } }
+     *              }
+     *     }
      * )
      * @SWG\Parameter(
-     *     name="limit",
-     *     in="query",
-     *     type="string",
-     *     description="The field used to determine the number of genres returned"
+     *     name="id",
+     *     in="path",
+     *     type="integer",
+     *     description="The unique identifier of the book to delete",
      * )
-     * @SWG\Parameter(
-     *     name="page",
-     *     in="query",
-     *     type="string",
-     *     description="The field used to resolve the requested page"
-     * )
+     *
      * @SWG\Tag(name="books")
      * @Security(name="Bearer")
      *
@@ -253,7 +290,7 @@ class BookApiController extends BaseApiController
     }
 
     /**
-     * Disallow delete on entire collections
+     * Disallow the deletion of entire collections
      *
      * @return Response
      */

@@ -126,6 +126,8 @@ vich_uploader:
 fos_rest:
     routing_loader:
         default_format: json
+    serializer:
+            groups: [Default,books,authors]
 
 # Nelmio
 nelmio_api_doc:

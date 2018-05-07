@@ -10,6 +10,7 @@
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.2/chosen.min.css">
             <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
             <link rel="stylesheet" href="{{  asset('build/css/main.css')  }}" />
+            <link rel="stylesheet" href="{{  asset('build/css/google-books.css')  }}" />
         {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
@@ -146,6 +147,8 @@
         </div>
         {% block javascripts %}
             <script src="{{ asset('build/js/main.js') }}"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+            <script src="{{ asset('build/js/google_books.js') }}"></script>
         {% endblock %}
     </body>
 </html>

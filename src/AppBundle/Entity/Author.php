@@ -9,6 +9,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use JMS\Serializer\Annotation\ Exclude;
 use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Groups;
+
 
 /**
  * Author
@@ -31,6 +33,8 @@ class Author
     /**
      * @var string
      *
+     * @Groups({"books"})
+     *
      * @ORM\Column(name="name", type="string", length=100)
      */
     private $name;
@@ -39,6 +43,7 @@ class Author
      * @var string
      *
      * @ORM\Column(name="avatar", type="string", length=255, nullable=true)
+     * @Exclude
      */
     private $avatar;
 
@@ -61,6 +66,7 @@ class Author
      * @var string
      *
      * @ORM\Column(name="signature", type="string", length=255)
+     * @Exclude
      */
     private $signature;
 
@@ -74,6 +80,8 @@ class Author
 
     /**
      * @var string|null
+     *
+     * @Groups({"authors"})
      *
      * @ORM\Column(name="biography", type="text", nullable=true)
      */

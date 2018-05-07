@@ -6,6 +6,42 @@
         {% trans %}title.add_book{% endtrans %}
     </h1>
 
+    <form method="POST" name="populate_google">
+        <input name="search_term" type="text"><br>
+        <input style="max-width: 250px" type="submit" value="Search through Google Books" class="btn--submit">
+    </form>
+
+    {% if books %}
+        <div class="google-book-search-wrapper">
+        {% for book in books %}
+            <div class="google-book-search-item">
+                <img src="{{ book["volumeInfo"]["imageLinks"]["thumbnail"] }}" alt="">
+                <form name="google_book_info" method="POST">
+                    <button class="google-book-populate-btn" type="submit">
+                        {{ book["volumeInfo"]["title"] }}
+                        <p class="isbn">{{ book["volumeInfo"]["industryIdentifiers"][0]["identifier"] }}</p>
+                    </button>
+                    <input type="hidden" name="isbn" value="{{ book["volumeInfo"]["industryIdentifiers"][0]["identifier"] }}">
+                    <input type="hidden" name="title" value="{{ book["volumeInfo"]["title"] }}">
+                    <input type="hidden" name="selfLink" value="{{ book["selfLink"] }}">
+
+                    {% if book["volumeInfo"]["description"] is defined %}
+                        <input type="hidden" name="description" value="{{ book["volumeInfo"]["description"] }}">
+                    {% endif %}
+
+                    {% if book["volumeInfo"]["authors"] is defined %}
+                        <input type="hidden" name="authors" value="{{ book["volumeInfo"]["authors"] | json_encode }}">
+                    {% endif %}
+
+                    {% if book["volumeInfo"]["categories"] is defined %}
+                        <input type="hidden" name="categories" value="{{ book["volumeInfo"]["categories"] | json_encode }}">
+                    {% endif %}
+                </form>
+            </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+    <div style="clear: both"></div>
     {{ form_start(form) }}
     {{ form_widget(form) }}
         <p>
@@ -15,7 +51,15 @@
             <a href="{{ path('worth_reading_genres_new') }}">Can't find a Genre?</a>
         </p>
 
-        <input type="submit" value="{% trans %}text.create{% endtrans %}" class="btn--submit">
+        {% if book is defined %}
+            <input type="hidden" id="book-cover-path-js" name="book_image" value="{{ book_image }}">
+        {% endif %}
+
+        {% if full_image is defined %}
+            <input type="hidden" name="full_image" value="{{ full_image }}">
+        {% endif %}
+
+        <input name="create" type="submit" value="{% trans %}text.create{% endtrans %}" class="btn--submit">
     {{ form_end(form) }}
 
 {% endblock %}

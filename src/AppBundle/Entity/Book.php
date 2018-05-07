@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation\ Exclude;
+use Swagger\Annotations as SWG;
 
 /**
  * Book
@@ -22,6 +23,8 @@ class Book
     /**
      * @var int
      *
+     * @SWG\Property(description="ID of this book")
+     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -30,6 +33,8 @@ class Book
 
     /**
      * @var string
+     *
+     * @SWG\Property(description="13-digit ISBN of this book")
      *
      * @ORM\Column(name="isbn", type="string", length=255, unique=true)
      *
@@ -43,6 +48,8 @@ class Book
     /**
      * @var string
      *
+     * @SWG\Property(description="Title of this book")
+     *
      * @ORM\Column(name="title", type="string", length=255)
      */
     private $title;
@@ -50,12 +57,17 @@ class Book
     /**
      * @var string|null
      *
+     * @SWG\Property(description="Summary of this book")
+     *
      * @ORM\Column(name="summary", type="text", nullable=true)
+     *
      */
     private $summary;
 
     /**
      * @var string
+     *
+     * @SWG\Property(description="Name of this book")
      *
      * @ORM\Column(name="bookCover", type="string", length=255, nullable=true)
      */
@@ -73,7 +85,7 @@ class Book
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\ManyToMany(targetEntity="Author", inversedBy="books")
      * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
-     * @Exclude
+     *
      */
     private $authors;
 

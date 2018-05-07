@@ -86,6 +86,68 @@
                 </div>
             </div>
         </div><!-- end of row -->
+
+        <div class="google-books-wrapper">
+            {% if google_book %}
+
+                <h2>Extra Details</h2>
+
+                <div class="powered-by">
+                    <small>Powered by</small> <img class="google-books-logo" src="https://upload.wikimedia.org/wikipedia/commons/3/38/Google_Books_logo_2015.PNG" alt="Google Book Logo">
+                </div>
+
+                <div class="google-books-container">
+
+                    <div class="google-books">
+                        <table class="google-books-meta-table">
+
+                            {% if google_book[0]["volumeInfo"]["maturityRating"] is defined %}
+                                <tr><th>Link</th><td><a href="{{ google_book[0]["volumeInfo"]["previewLink"] }}">View on Google Books</a></td></tr>
+                            {% endif %}
+
+                            {% if google_book[0]["volumeInfo"]["publisher"] is defined %}
+                                <tr><th>Publisher</th><td>{{ google_book[0]["volumeInfo"]["publisher"] }}</td></tr>
+                            {% endif %}
+
+                            {% if google_book[0]["volumeInfo"]["publishedDate"] is defined %}
+                                <tr><th>Published Date</th><td>{{ google_book[0]["volumeInfo"]["publishedDate"] }}</td></tr>
+                            {% endif %}
+
+                            {% if google_book[0]["volumeInfo"]["pageCount"] is defined %}
+                                <tr><th>Page Count</th><td>{{ google_book[0]["volumeInfo"]["pageCount"] }}</td></tr>
+                            {% endif %}
+
+                            {% if google_book[0]["volumeInfo"]["printType"] is defined %}
+                                <tr><th>Print Type</th><td>{{ google_book[0]["volumeInfo"]["printType"] }}</td></tr>
+                            {% endif %}
+
+                        </table>
+                    </div>
+                    <div class="google-books">
+                        <table class="google-books-meta-table">
+
+                            {% if google_book[0]["volumeInfo"]["maturityRating"] is defined %}
+                                <tr><th>Maturity Rating</th><td>{{ google_book[0]["volumeInfo"]["maturityRating"] }}</td></tr>
+                            {% endif %}
+
+                            {% if google_book[0]["volumeInfo"]["language"] is defined %}
+                                <tr><th>Language</th><td>{{ google_book[0]["volumeInfo"]["language"] }}</td></tr>
+                            {% endif %}
+
+                            {% if google_book[0]["volumeInfo"]["averageRating"] is defined %}
+                                <tr><th>Average Rating</th><td>{{ google_book[0]["volumeInfo"]["averageRating"] }}</td></tr>
+                            {% endif %}
+
+                            {% if google_book[0]["volumeInfo"]["ratingsCount"] is defined %}
+                                <tr><th>Ratings Count</th><td>{{ google_book[0]["volumeInfo"]["ratingsCount"] }}</td></tr>
+                            {% endif %}
+
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
         <div class="reviews">
             <h2>Reviews <small>({{ numReviews }})</small></h2>
             <div style="clear: both"></div>

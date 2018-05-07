@@ -1,0 +1,1 @@
+$("#appbundle_book_bookCoverFile").removeAttr('required');
