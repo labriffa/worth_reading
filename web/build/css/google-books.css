@@ -93,3 +93,47 @@
     color: #7a869d;
     font-size:13px;
 }
+
+.good_reads_reviews {
+    float: left;
+}
+
+.good_reads_reviews {
+    width: 100%;
+}
+
+#goodreads-widget h1 {
+    font-size: 20px !important;
+    width: 50% !important;
+    display: inline;
+    margin-bottom: 0 !important;
+    border-bottom: 1px solid black;
+}
+
+#goodreads-widget h1:before {
+    content: "";
+    display: none;
+}
+
+#the_iframe {
+    width: 100%;
+}
+
+#goodreads-widget {
+    width: 100% !important;
+}
+
+#goodreads-widget a {
+    color: black;
+    margin-bottom: 20px !important;
+    display: block;
+ }
+
+.good_reads_reviews_title {
+    margin-top: 50px;
+    font-size: 20px !important;
+    width: 100% !important;
+    display: inline;
+    margin-bottom: 0 !important;
+    border-bottom: 1px solid #d1d1d1;
+}

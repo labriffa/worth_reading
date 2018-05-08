@@ -148,6 +148,14 @@
             {% endif %}
         </div>
 
+        <!-- Good reads reviews -->
+        {% if good_reads_reviews %}
+            <h2 class="good_reads_reviews_title">GoodReads Reviews</h2>
+            <div class="good_reads_reviews">
+                {{ good_reads_reviews | raw }}
+            </div>
+        {% endif %}
+
         <div class="reviews">
             <h2>Reviews <small>({{ numReviews }})</small></h2>
             <div style="clear: both"></div>

@@ -85,6 +85,8 @@ class BookController extends BaseController
         // get user
         $user = $this->getUser();
 
+        $good_reads_reviews = "";
+
         $review = $user ? $reviewService->userBookReview($book, $user) : new Review();
 
         $review_form = $this->createForm(ReviewType::class, $review);
@@ -106,6 +108,21 @@ class BookController extends BaseController
 
         $google_book = json_decode($response->getBody(), true);
 
+        // get goodreads review widget
+
+        $client = new Client();
+        $res = $client->get('https://www.goodreads.com/book/isbn/'.$book->getIsbn().'?key=Y2L2h66TxHsrUF3sAH71dA&format=xml');
+
+        $xmlstring = $res->getBody();
+
+        $xml = simplexml_load_string($xmlstring, "SimpleXMLElement", LIBXML_NOCDATA);
+        $json = json_encode($xml);
+        $array = json_decode($json,TRUE);
+
+        if(isset($array['book']['reviews_widget'])) {
+            $good_reads_reviews = $array['book']['reviews_widget'];
+        }
+
         // if the user is logged in
         if($user) {
             $review_form->handleRequest($request);
@@ -126,6 +143,7 @@ class BookController extends BaseController
             'review' => $review,
             'avgRating' => $reviewService->averageBookReviewRating($book),
             'numReviews' => $reviewService->numBookReviews($book),
+            'good_reads_reviews' => $good_reads_reviews,
         ];
     }
 
