@@ -22,37 +22,51 @@ use Swagger\Annotations as SWG;
 class UserApiController extends BaseApiController
 {
     /**
-     * List Users
+     * Retrieve Users
      *
-     * This call returns a collection of users as a paginated response
+     * Returns a paginated collection of user resources
      *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns a paginated collection of users",
-     *     @SWG\Schema(
-     *         type="array",
-     *         @Model(type=User::class),
-     *         @SWG\Items(
-     *              type="object",
-     *              @SWG\Property(property="id", type="integer", example="1"),
-     *              @SWG\Property(property="name", type="string", example="Horror")
-     *          )
-     *     )
+     *     description="Returns a paginated collection of user resources",
+     *     examples={
+     *          "": {
+     *                  { "id": "1", "username": "lewis", "_self" : "{ href: /api/v1/users/1 }" }
+     *              },
+     *          "Pagination Links": {
+     *              "self": {
+     *                  "href": "/api/v1/users?page=1&limit=10"
+     *              },
+     *                  "first": {
+     *                      "href": "/api/v1/users?page=1&limit=10"
+     *              },
+     *                  "last": {
+     *                      "href": "/api/v1/users?page=2&limit=10"
+     *              },
+     *                  "next": {
+     *                      "href": "/api/v1/users?page=2&limit=10"
+     *              }
+     *          }
+     *     }
      * )
      * @SWG\Parameter(
      *     name="limit",
      *     in="query",
-     *     type="string",
-     *     description="The field used to determine the number of genres returned"
+     *     type="integer",
+     *     default=10,
+     *     required=false,
+     *     description="The number of users to return"
      * )
      * @SWG\Parameter(
      *     name="page",
      *     in="query",
-     *     type="string",
-     *     description="The field used to resolve the requested page"
+     *     type="integer",
+     *     default=1,
+     *     description="The page index of the paginated response"
      * )
+     *
      * @SWG\Tag(name="users")
-     * @Security(name="Bearer")
+     *
      */
     public function getUsersAction(Request $request)
     {
@@ -63,5 +77,51 @@ class UserApiController extends BaseApiController
             $users,
             'worth_reading_api_get_books'
         );
+    }
+
+
+    /**
+     * Retrieve a user
+     *
+     * Retrieves a user resource based on a given id
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns the user associated with the requested id",
+     *     examples={
+     *          "": {
+     *                  { "id": "1", "username": "Lewis", "_self" : "{ href: /api/v1/users/1 }" }
+     *              },
+     *     }
+     * )
+     *
+     * @SWG\Response(
+     *     response=404,
+     *     description="ID not found or invalid",
+     *     examples={
+     *          "": "A user with that ID could not be found"
+     *     }
+     * )
+     *
+     * @SWG\Parameter(
+     *     name="id",
+     *     in="path",
+     *     description="The id of the user to retrieve",
+     *     required=true,
+     *     type="integer"
+     * )
+     * @SWG\Tag(name="users")
+     *
+     * @param $id
+     * @return null|object
+     */
+    public function getUserAction($id) {
+        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+
+        if(!$user) {
+            $this->createApiResponse("The user with that id could not be found", 404);
+        }
+
+        return $user;
     }
 }

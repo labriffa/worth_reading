@@ -8,14 +8,21 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation\ Exclude;
+use JMS\Serializer\Annotation as JMS;
+use JMS\Serializer\Annotation as Serializer;
 use Swagger\Annotations as SWG;
+use Hateoas\Configuration\Annotation as Hateoas;
+use JMS\Serializer\Annotation\Groups;
+
 
 /**
  * Book
- *
+
  * @ORM\Table(name="books")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\BookRepository")
  * @Vich\Uploadable
+ * @Serializer\AccessorOrder("custom", custom = {"id", "isbn", "title", "summary","book_cover", "author"})
+ * @Hateoas\Relation("self", href = "expr('/api/v1/books/' ~ object.getId())")
  *
  */
 class Book
@@ -28,6 +35,7 @@ class Book
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"books", "book"})
      */
     private $id;
 
@@ -42,6 +50,7 @@ class Book
      *     type = "isbn13",
      *     message = "This value is not  valid."
      * )
+     * @Groups({"books", "book"})
      */
     private $isbn;
 
@@ -51,6 +60,7 @@ class Book
      * @SWG\Property(description="Title of this book")
      *
      * @ORM\Column(name="title", type="string", length=255)
+     * @Groups({"books", "book"})
      */
     private $title;
 
@@ -70,6 +80,7 @@ class Book
      * @SWG\Property(description="Name of this book")
      *
      * @ORM\Column(name="bookCover", type="string", length=255, nullable=true)
+     * @Exclude
      */
     private $bookCover;
 
@@ -85,6 +96,7 @@ class Book
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\ManyToMany(targetEntity="Author", inversedBy="books")
      * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
+     * @Exclude
      *
      */
     private $authors;
@@ -528,5 +540,53 @@ class Book
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @Serializer\VirtualProperty()
+     * @Serializer\Type("array<string>")
+     * @Serializer\SerializedName("authors")
+     */
+    public function getAuthorName() {
+
+        $authors = [];
+
+        foreach($this->getAuthors() as $author) {
+            array_push($authors, $author->getName());
+        }
+
+        return $authors;
+    }
+
+    /**
+     * @Serializer\VirtualProperty()
+     * @Serializer\Type("array<string>")
+     * @Serializer\SerializedName("genres")
+     */
+    public function getGenreName() {
+
+        $genres = [];
+
+        foreach($this->getGenres() as $genre) {
+            array_push($genres, $genre->getName());
+        }
+
+        return $genres;
+    }
+
+    /**
+     * @Serializer\VirtualProperty()
+     * @Serializer\SerializedName("cover")
+     */
+    public function getBookCoverLocation() {
+        return 'http://localhost:8003/uploads/books/covers/' . $this->getBookCover();
+    }
+
+    /**
+     * @Serializer\VirtualProperty()
+     * @Serializer\SerializedName("user")
+     */
+    public function getUsername() {
+        return $this->getUser()->getUsername();
     }
 }

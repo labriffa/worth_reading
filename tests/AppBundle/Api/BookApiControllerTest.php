@@ -11,5 +11,15 @@ use PHPUnit\Framework\TestCase;
 
 class BookApiControllerTest extends TestCase
 {
+    public function testGet() {
 
+        $client = new \GuzzleHttp\Client([
+           'base_url' => 'http://localhost:8003',
+           'defaults' => [
+               'exceptions' => false,
+           ]
+        ]);
+
+
+    }
 }

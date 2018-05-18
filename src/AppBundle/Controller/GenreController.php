@@ -20,7 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 class GenreController extends Controller
 {
     /**
-     * Shows a list of genres
+     * Retrieves Genres
      *
      * @Template(":genre:index.html.twig")
      * @return array

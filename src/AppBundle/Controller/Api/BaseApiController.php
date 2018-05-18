@@ -9,6 +9,7 @@
 namespace AppBundle\Controller\Api;
 
 
+use AppBundle\Service\BookService;
 use FOS\RestBundle\Controller\FOSRestController;
 use Hateoas\Configuration\Route;
 use Hateoas\Representation\Factory\PagerfantaFactory;
@@ -23,15 +24,15 @@ abstract class BaseApiController extends FOSRestController
     const DEFAULT_PAGE_LIMIT = 10;
     const DEFAULT_PAGE_NO = 1;
 
-    protected function serialize($data, $format = 'json', $groups=['default'])
+    protected function serialize($data, $format = 'json')
     {
         return $this->container->get('jms_serializer')
-            ->serialize($data, $format, SerializationContext::create()->setGroups($groups));
+            ->serialize($data, $format);
     }
 
-    protected function createApiResponse($data, $statusCode = 200, $groups=['default'])
+    protected function createApiResponse($data, $statusCode = 200)
     {
-        $json = $this->serialize($data, $groups);
+        $json = $this->serialize($data);
 
         return new Response($json, $statusCode, array(
             'Content-Type' => 'application/json'
@@ -48,11 +49,9 @@ abstract class BaseApiController extends FOSRestController
      */
     protected function paginatedResponse($request, $arr, $route_name, $id=null)
     {
-
         // get query parameters
         $limit = $request->query->getInt('limit', BaseApiController::DEFAULT_PAGE_LIMIT);
         $page = $request->query->getInt('page', BaseApiController::DEFAULT_PAGE_NO);
-        $sorting = $request->query->get('sorting', array());
 
         // create pager adapter
         $pagerAdapter = new ArrayAdapter($arr);
@@ -62,10 +61,6 @@ abstract class BaseApiController extends FOSRestController
         $pager->setCurrentPage($page);
         $pager->setMaxPerPage($limit);
 
-        $data = array();
-        foreach($pager->getCurrentPageResults() as $element) {
-            $datap[] = $element;
-        }
 
         // create factory
         $pagerFactory = new PagerfantaFactory();
@@ -77,6 +72,9 @@ abstract class BaseApiController extends FOSRestController
         if($id) {
             $route_params["id"] = $id;
         }
+
+        // add existing parameters
+        $route_params = array_merge($route_params, $request->query->all());
 
         // create and handle page representation
         $paginatedCollection = $pagerFactory->createRepresentation($pager, new Route($route_name, $route_params));

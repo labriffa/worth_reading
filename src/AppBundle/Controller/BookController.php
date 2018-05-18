@@ -72,6 +72,56 @@ class BookController extends BaseController
     }
 
     /**
+     * Retrieves books based on the currently selected filters
+     *
+     * @Template(":book:best.sellers.html.twig")
+     * @return array
+     */
+    public function bestSellersAction() {
+        $client = new Client();
+        $res = $client->get('https://api.nytimes.com/svc/books/v3/lists/best-sellers/history.json?api-key=7c8b74d63ad6464ebe28e5bda8d76df2');
+        $ny_arr = json_decode($res->getBody(), true);
+        $results = $ny_arr["results"];
+
+        $google_book_reads_books = [];
+
+        foreach($results as $result) {
+
+            if(isset($result["isbns"][0]["isbn13"])) {
+
+                $isbn13 = $result["isbns"][0]["isbn13"];
+
+                $res = $client->get('https://www.goodreads.com/search/index.xml'.'?key=Y2L2h66TxHsrUF3sAH71dA&format=xml&q='.$isbn13);
+
+                $xmlstring = $res->getBody();
+
+                $xml = simplexml_load_string($xmlstring, "SimpleXMLElement", LIBXML_NOCDATA);
+                $json = json_encode($xml);
+                $array = json_decode($json,TRUE);
+
+
+                if(isset($array["search"]["results"]["work"])) {
+                    array_push($google_book_reads_books, $array["search"]["results"]["work"]);
+                } else {
+                    array_push($google_book_reads_books, []);
+                }
+
+
+            } else {
+                array_push($google_book_reads_books, []);
+            }
+
+        }
+
+        dump($google_book_reads_books);
+
+        return [
+            "books" => $results,
+            "good_reads" => $google_book_reads_books
+        ];
+    }
+
+    /**
      * Retrieves a single book entry
      *
      * @Template(":book:single.html.twig")
@@ -86,6 +136,8 @@ class BookController extends BaseController
         $user = $this->getUser();
 
         $good_reads_reviews = "";
+
+        $good_reads_book_other_editions = [];
 
         $review = $user ? $reviewService->userBookReview($book, $user) : new Review();
 
@@ -111,7 +163,7 @@ class BookController extends BaseController
         // get goodreads review widget
 
         $client = new Client();
-        $res = $client->get('https://www.goodreads.com/book/isbn/'.$book->getIsbn().'?key=Y2L2h66TxHsrUF3sAH71dA&format=xml');
+        $res = $client->get('https://www.goodreads.com/book/isbn/'.$book->getIsbn().'?key=Y2L2h66TxHsrUF3sAH71dA&format=xml', ['http_errors' => false]);
 
         $xmlstring = $res->getBody();
 
@@ -121,6 +173,40 @@ class BookController extends BaseController
 
         if(isset($array['book']['reviews_widget'])) {
             $good_reads_reviews = $array['book']['reviews_widget'];
+        }
+
+        // get library thing
+        $client = new Client();
+        $res = $client->get('http://www.librarything.com/api/thingISBN/'.$book->getIsbn());
+
+        $xmlstring = $res->getBody();
+
+        $xml = simplexml_load_string($xmlstring, "SimpleXMLElement", LIBXML_NOCDATA);
+        $json = json_encode($xml);
+        $array = json_decode($json,TRUE);
+
+        if(isset($array['isbn'])) {
+            $books = $array['isbn'];
+
+            $libray_thing_other_editions = array_slice($books, 0, 5);
+
+            foreach ($libray_thing_other_editions as $edition) {
+                $res = $client->get('https://www.goodreads.com/search/index.xml'.'?key=Y2L2h66TxHsrUF3sAH71dA&format=xml&q='.$edition);
+
+                $xmlstring = $res->getBody();
+
+                $xml = simplexml_load_string($xmlstring, "SimpleXMLElement", LIBXML_NOCDATA);
+                $json = json_encode($xml);
+                $array = json_decode($json,TRUE);
+
+                dump($array);
+
+
+
+                if(isset($array["search"]["results"]["work"])) {
+                    array_push($good_reads_book_other_editions, $array["search"]["results"]["work"]);
+                }
+            }
         }
 
         // if the user is logged in
@@ -144,6 +230,7 @@ class BookController extends BaseController
             'avgRating' => $reviewService->averageBookReviewRating($book),
             'numReviews' => $reviewService->numBookReviews($book),
             'good_reads_reviews' => $good_reads_reviews,
+            'good_reads_other_editions' => $good_reads_book_other_editions
         ];
     }
 
@@ -322,6 +409,8 @@ class BookController extends BaseController
                 );
 
                 $google_book = json_decode($response->getBody(), true);
+
+                dump($google_book);
 
                 $arr["books"] = $google_book["items"];
             }

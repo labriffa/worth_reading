@@ -31,9 +31,8 @@ class Genre
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
-     * @SWG\Property(description="The unique identifier of the genre.")
      */
-    private $name;
+    public $name;
 
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection

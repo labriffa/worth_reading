@@ -4,12 +4,16 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ Exclude;
+use JMS\Serializer\Annotation as Serializer;
+use Hateoas\Configuration\Annotation as Hateoas;
 
 /**
  * Review
  *
  * @ORM\Table(name="reviews")
+ * @Serializer\AccessorOrder("custom", custom = {"id", "title", "text", "rating","timestamp"})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ReviewRepository")
+ * @Hateoas\Relation("self", href = "expr('/api/v1/books/' ~ object.getBook().getId() ~ '/reviews/' ~ object.getId())")
  */
 class Review
 {
@@ -225,5 +229,16 @@ class Review
     public function __toString()
     {
         return $this->getText();
+    }
+
+    /**
+     * @Serializer\VirtualProperty()
+     * @Serializer\SerializedName("username")
+     *
+     */
+    public function getUserUri() {
+
+        return $this->getUser()->getUsername();
+
     }
 }

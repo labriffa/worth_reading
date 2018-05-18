@@ -137,3 +137,57 @@
     margin-bottom: 0 !important;
     border-bottom: 1px solid #d1d1d1;
 }
+
+.good_reads_other_editions {
+    float: left;
+}
+
+.good_reads_other_editions img {
+    width: 100px !important;
+    height: 150px;
+    object-fit: cover;
+    margin-right: 20px;
+    display: inline-block;
+}
+
+.good_reads_other_editions_title {
+    margin-top: 50px;
+    font-size: 20px !important;
+    width: 100% !important;
+    display: inline;
+    margin-bottom: 50px;
+    border-bottom: 1px solid #d1d1d1;
+}
+
+.good_reads_other_editions_books {
+    float: left;
+    width: 100%;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    white-space: normal;
+}
+
+.good_reads_other_editions_books .book {
+    text-align: center;
+}
+
+.good_reads_btn {
+    border-radius: 3px;
+    border: 1px solid #D6D0C4;
+    font-family: "Lato", "Helvetica Neue", "Helvetica", sans-serif;
+    font-size: 13px;
+    -moz-appearance: none;
+    -o-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    color: #333333;
+    background-color: #F4F1EA;
+    line-height: 1;
+    padding: 8px 12px;
+    margin-right: 8px;
+    margin-top: 8px;
+}

@@ -22,40 +22,59 @@ use Swagger\Annotations as SWG;
 class AuthorApiController extends BaseApiController
 {
     /**
-     * List authors
+     * Retrieve authors
      *
-     * This call returns a collection of authors as a paginated response
+     * Returns a paginated collection of author resources
      *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns a paginated collection of authors",
-     *     @SWG\Schema(
-     *         type="array",
-     *         @Model(type=Author::class),
-     *         @SWG\Items(
-     *              type="object",
-     *              @SWG\Property(property="id", type="integer", example="1"),
-     *              @SWG\Property(property="name", type="string", example="Stephen King"),
-     *              @SWG\Property(property="avatar", type="string", example="c5b347b4a08e402e0ca4f7d78f6ded82"),
-     *              @SWG\Property(property="signature", type="string", example="0167b290f06defefb09d828313063c35"),
-     *              @SWG\Property(property="biography", type="string", example="Stephen Edwin King was born the second son of Donald and Nellie Ruth Pillsbury King. After his...")
-     *          )
-     *     )
+     *     description="Returns a paginated collection of author resources",
+     *     examples={
+     *          "": {
+     *                  { "id": "1", "name": "Stephen King", "biography": "Stephen Edwin King was born the second...", "avatar": "http://localhost:8003/uploads/authors/avatars...", "_self" : "{ href: /api/v1/authors/1 }" }
+     *              },
+     *          "Pagination Links": {
+     *              "self": {
+     *                  "href": "/api/v1/authors?page=1&limit=10"
+     *              },
+     *                  "first": {
+     *                      "href": "/api/v1/authors?page=1&limit=10"
+     *              },
+     *                  "last": {
+     *                      "href": "/api/v1/authors?page=2&limit=10"
+     *              },
+     *                  "next": {
+     *                      "href": "/api/v1/authors?page=2&limit=10"
+     *              }
+     *          }
+     *     }
      * )
+     *
+     * @SWG\Response(
+     *     response=404,
+     *     description="ID not found or invalid",
+     *     examples={
+     *          "": "An author with that ID could not be found"
+     *     }
+     * )
+     *
      * @SWG\Parameter(
      *     name="limit",
      *     in="query",
-     *     type="string",
-     *     description="The field used to determine the number of authors returned"
+     *     type="integer",
+     *     default=10,
+     *     required=false,
+     *     description="The number of authors to return"
      * )
      * @SWG\Parameter(
      *     name="page",
      *     in="query",
-     *     type="string",
-     *     description="The field used to resolve the requested page"
+     *     type="integer",
+     *     default=1,
+     *     description="The page index of the paginated response"
      * )
+     *
      * @SWG\Tag(name="authors")
-     * @Security(name="Bearer")
      */
     public function getAuthorsAction(Request $request)
     {
@@ -66,23 +85,30 @@ class AuthorApiController extends BaseApiController
     /**
      * Retrieve an author
      *
+     * Retrieves an author resource based on a given id
+     *
      * @SWG\Response(
      *     response=200,
      *     description="Returns the author associated with the requested id",
-     *     @SWG\Schema(
-     *         type="array",
-     *         @Model(type=Author::class),
-     *         @SWG\Items(
-     *              type="object",
-     *              @SWG\Property(property="id", type="integer", example="1"),
-     *              @SWG\Property(property="name", type="string", example="Horror")
-     *          )
-     *     )
+     *     examples={
+     *          "": {
+     *                  { "id": "1", "name": "Stephen King", "biography": "Stephen Edwin King was born the second...", "avatar": "http://localhost:8003/uploads/authors/avatars...", "_self" : "{ href: /api/v1/authors/1 }" }
+     *              },
+     *     }
      * )
+     *
+     * @SWG\Response(
+     *     response=404,
+     *     description="ID not found or invalid",
+     *     examples={
+     *          "": "An author with that ID could not be found"
+     *     }
+     * )
+     *
      * @SWG\Parameter(
      *     name="id",
      *     in="path",
-     *     description="The id of the genre to retrieve",
+     *     description="The id of the author to retrieve",
      *     required=true,
      *     type="integer"
      * )
@@ -106,12 +132,45 @@ class AuthorApiController extends BaseApiController
     /**
      * Create an author
      *
+     * Creates an author resource
+     *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns a paginated collection of genres",
-     * )
+     *     description="Sets the location header to the newly created resource",
+     * ),
+     * @SWG\Response(
+     *     response=401,
+     *     description="Unauthorized Access",
+     *     examples={
+     *          "": "OAuth2 Authentication Required"
+     *     }
+     * ),
+     *
+     * @SWG\Parameter(
+     *         description="The name of the author",
+     *         in="body",
+     *         name="name",
+     *         required=true,
+     *         @SWG\Schema(type="R.L. Stine")
+     *  )
+     *
+     * @SWG\Parameter(
+     *         description="A short bio of the author",
+     *         in="body",
+     *         name="biography",
+     *         required=true,
+     *         @SWG\Schema(type="Robert Lawrence Stine, sometimes known as Jovial Bob...")
+     *  )
+     *
+     * @SWG\Parameter(
+     *         description="A Base 64 encoding of the authors avatar",
+     *         in="body",
+     *         name="avatarFile",
+     *         required=true,
+     *         @SWG\Schema(type="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASAB...")
+     *  )
+     *
      * @SWG\Tag(name="authors")
-     * @Security(name="Bearer")
      *
      * @param Request $request
      * @return Response
@@ -166,22 +225,154 @@ class AuthorApiController extends BaseApiController
         }
     }
 
+
     /**
-     * Remove an author
+     *
+     * Update an Author
+     *
+     * Updates an author resource
      *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns a paginated collection of genres"
+     *     description="",
+     * ),
+     * @SWG\Response(
+     *     response=401,
+     *     description="Unauthorized Access",
+     *     examples={
+     *          "": "OAuth2 Authentication Required"
+     *     }
+     * ),
+     *
+     * @SWG\Response(
+     *     response=404,
+     *     description="An author with that id could not be found"
+     * ),
+     *
+     * @SWG\Parameter(
+     *         description="The name of the author",
+     *         in="body",
+     *         name="name",
+     *         required=true,
+     *         @SWG\Schema(type="R.L. Stine")
+     *  )
+     *
+     * @SWG\Parameter(
+     *         description="A short bio of the author",
+     *         in="body",
+     *         name="biography",
+     *         required=true,
+     *         @SWG\Schema(type="Robert Lawrence Stine, sometimes known as Jovial Bob...")
+     *  )
+     *
+     * @SWG\Parameter(
+     *         description="A Base 64 encoding of the authors avatar",
+     *         in="body",
+     *         name="avatarFile",
+     *         required=true,
+     *         @SWG\Schema(type="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASAB...")
+     *  )
+     *
+     * @SWG\Parameter(
+     *     name="id",
+     *     in="path",
+     *     description="The id of the author to retrieve",
+     *     required=true,
+     *     type="integer"
+     * )
+     *
+     * @SWG\Tag(name="authors")
+     *
+     * @param $id
+     * @param Request $request
+     * @return Response
+     */
+    public function putAuthorAction($id, Request $request)
+    {
+        $author = $this->getDoctrine()->getRepository(Author::class)->find($id);
+
+        if(!$author) {
+            return $this->createApiResponse("No author associated with this ID", 404);
+        }
+
+        $form = $this->createForm(AuthorApiType::class, $author);
+
+        // check if the content type matches the expected json
+        if($request->getContentType() != 'json') {
+            return $this->createApiResponse(
+                "Invalid JSON",
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        // submit the form
+        $form->submit(json_decode($request->getContent(), true));
+
+        // check if the form is valid
+        if($form->isValid()) {
+
+            $author->setAvatarFile(
+                $this->convertBase64Image(
+                    $this->getParameter('author_avatars_directory'),
+                    $form->get("avatarFile")->getData()
+                )
+            );
+
+            $author->setSignatureFile(
+                $this->convertBase64Image(
+                    $this->getParameter('author_signatures_directory'),
+                    $form->get("signatureFile")->getData()
+                )
+            );
+
+            $form->handleRequest($request);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($author);
+            $em->flush();
+
+            // set the header to point to the new resource
+            return $this->handleView($this->view(null, Response::HTTP_CREATED)
+                ->setLocation($this->generateUrl('worth_reading_api_get_author', [
+                    'id' => $author->getId()
+                ])));
+
+        } else {
+            return $this->handleView($this->view($form , Response::HTTP_BAD_REQUEST));
+        }
+    }
+
+    /**
+     * Remove an author
+     *
+     * Deletes an individual author resource
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="",
+     * ),
+     * @SWG\Response(
+     *     response=404,
+     *     description="ID not found or invalid",
+     *     examples={
+     *          "": "An author with that ID could not be found"
+     *     }
+     * ),
+     * @SWG\Response(
+     *     response=401,
+     *     description="Unauthorized Access",
+     *     examples={
+     *          "": "OAuth2 Authentication Required"
+     *     }
      * )
      * @SWG\Parameter(
      *     name="id",
      *     in="path",
-     *     description="The id of the genre to remove",
-     *     required=true,
-     *     type="integer"
+     *     type="integer",
+     *     description="The unique identifier of the author to delete",
      * )
-     * @SWG\Tag(name="genres")
-     * @Security(name="Bearer")
+     *
+     * @SWG\Tag(name="authors")
      *
      * @param Integer $id
      * @return \Symfony\Component\HttpFoundation\Response

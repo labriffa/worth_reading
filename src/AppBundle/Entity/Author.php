@@ -10,13 +10,16 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use JMS\Serializer\Annotation\ Exclude;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
-
+use JMS\Serializer\Annotation as Serializer;
+use Hateoas\Configuration\Annotation as Hateoas;
 
 /**
  * Author
  *
  * @ORM\Table(name="authors")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\AuthorRepository")
+ * @Serializer\AccessorOrder("custom", custom = {"id", "name", "biography", "avatar"})
+ * @Hateoas\Relation("self", href = "expr('/api/v1/authors/' ~ object.getId())")
  * @Vich\Uploadable
  */
 class Author
@@ -258,5 +261,13 @@ class Author
     public function __toString()
     {
         return $this->getName();
+    }
+
+    /**
+     * @Serializer\VirtualProperty()
+     * @Serializer\SerializedName("avatar")
+     */
+    public function getBookCoverLocation() {
+        return 'http://localhost:8003/uploads/authors/avatars/' . $this->getAvatar();
     }
 }

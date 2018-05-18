@@ -16,7 +16,7 @@
 
     {#page title#}
     <h1 class="float-left">
-        {% trans %}title.recently_added{% endtrans %}
+        Best Sellers - NY Times
     </h1>
 
     <a class="btn--view-all" href="{{ path('worth_reading_books') }}">
@@ -24,15 +24,51 @@
     </a>
 
     {#main book loop#}
-    {% if books %}
+    {% if books is defined %}
 
-        {% include '::book-grid.html.twig' with { 'books' : books } %}
+        <div class="books">
+            {% for book in books %}
+                {% if (loop.index % 2 != 0) or (loop.index == 1) %}
+                    <div class="row">
+                {% endif %}
+                <div class="col-6">
+                    <div class="book">
+                        <div class="row">
+                                <div class="col-5">
+                                    {% if good_reads[loop.index0] is not empty %}
+                                        <img class="book__image" src="{{ good_reads[loop.index0]["best_book"]["image_url"] }}" alt="">
+                                    {% else %}
+                                        <img class="book__image" src="https://s.gr-assets.com/assets/nophoto/book/111x148-bcc042a9c91a29c1d680899eff700a03.png" alt="">
+                                    {% endif %}
+
+                        {#<a href="{{ path('worth_reading_books_show', { 'id': book.id }) }}">#}
+                            {#<img class="book__image" src="{{ asset('uploads/books/covers/') }}{{  book.bookCover }}" alt="">#}
+                        {#</a>#}
+                    </div>
+                    <div class="col-7 book__info">
+                        <a class="book__link" href="">
+                            <p class="book__title" style="text-transform: capitalize">{{ book["title"] | capitalize }}</p>
+                        </a>
+                        <div class="book__author">
+                            <a>by {{ book["author"] }}</a>
+                        </div>
+
+                        <p class="book__summary">{{ book["description"] | length > 90 ? book["description"] | slice(0, 90) ~ '...' : book["description"] }}</p>
+                    </div>
+                </div>
+                </div>
+                </div>
+                {% if loop.index % 2 == 0 or loop.last %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
 
         <div style="clear: both"></div>
 
     {% else %}
 
-        <p>{% trans %}text.no_books{% endtrans %}</p>
+        <p style="float: left; display: block; width: 100%">{% trans %}text.no_books{% endtrans %}</p>
 
     {% endif %}
 

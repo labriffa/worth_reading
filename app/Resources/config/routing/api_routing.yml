@@ -12,7 +12,6 @@ worth_reading_api_authors:
   type: rest
   resource: AppBundle\Controller\Api\AuthorApiController
   name_prefix: worth_reading_api_
-  path: /books/{id}/reviews
 
 worth_reading_api_genres:
   type: rest

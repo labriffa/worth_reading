@@ -148,6 +148,22 @@
             {% endif %}
         </div>
 
+        <!-- Good reads other editions with Library Thing -->
+        {% if good_reads_other_editions %}
+        <div class="good_reads_other_editions">
+            <h2 class="good_reads_other_editions_title">Other Editions</h2>
+            <div class="good_reads_other_editions_books">
+                {% for book in good_reads_other_editions %}
+                    <div class="book">
+                        <img src="{{ book["best_book"]["image_url"] }}" alt="">
+                        <p>{{ book["best_book"]["title"] }}</p>
+                        <button class="good_reads_btn" href="https://www.goodreads.com/book/show/{{ book["best_book"]["id"] }}">GoodReads</button>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
         <!-- Good reads reviews -->
         {% if good_reads_reviews %}
             <h2 class="good_reads_reviews_title">GoodReads Reviews</h2>
