@@ -113,7 +113,6 @@ class AuthorApiController extends BaseApiController
      *     type="integer"
      * )
      * @SWG\Tag(name="authors")
-     * @Security(name="Bearer")
      *
      * @param Integer integer
      * @return \Symfony\Component\HttpFoundation\Response
@@ -171,6 +170,8 @@ class AuthorApiController extends BaseApiController
      *  )
      *
      * @SWG\Tag(name="authors")
+     *
+     * @Security(name="Bearer")
      *
      * @param Request $request
      * @return Response
@@ -282,6 +283,7 @@ class AuthorApiController extends BaseApiController
      * )
      *
      * @SWG\Tag(name="authors")
+     * @Security(name="Bearer")
      *
      * @param $id
      * @param Request $request
@@ -373,6 +375,7 @@ class AuthorApiController extends BaseApiController
      * )
      *
      * @SWG\Tag(name="authors")
+     * @Security(name="Bearer")
      *
      * @param Integer $id
      * @return \Symfony\Component\HttpFoundation\Response

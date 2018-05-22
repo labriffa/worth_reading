@@ -124,16 +124,32 @@ vich_uploader:
 
 # FOS Rest Configuration
 fos_rest:
+    format_listener:
+        rules:
+            - priorities: [ json, xml, html ]
+            - prefer_extension: false
     routing_loader:
         default_format: json
+    view:
+        view_response_listener: 'force'
+        formats:
+            json: true
+            xml: true
+        templating_formats:
+            html: true
     serializer:
-            groups: [Default,books,authors]
+        serialize_null: true
 
 # Nelmio
 nelmio_api_doc:
-    areas:
-        path_patterns:
-            - ^/api/v1(?!/doc$)
+  documentation:
+    info:
+      title: worthreading
+      description: This is an awesome app!
+      version: 1.0.0
+  areas:
+    path_patterns:
+      - ^/api/v1(?!/doc$)
 
 # JMS Serializer
 jms_serializer:

@@ -75,7 +75,6 @@ class ReviewApiController extends BaseApiController
      *     description="The unique identifier of the requested book"
      * )
      * @SWG\Tag(name="books")
-     * @Security(name="Bearer")
      *
      * GET Route annotation.
      * @Get("/books/{id}/reviews")
@@ -212,6 +211,7 @@ class ReviewApiController extends BaseApiController
      *
      * @Delete("/books/{id}/reviews/{id_review}")
      * @SWG\Tag(name="books")
+     * @Security(name="Bearer")
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -294,6 +294,7 @@ class ReviewApiController extends BaseApiController
      *
      *
      * @SWG\Tag(name="books")
+     * @Security(name="Bearer")
      *
      * @Post("/books/{id}/reviews")
      * @param $id
@@ -411,6 +412,7 @@ class ReviewApiController extends BaseApiController
      *
      * @Put("/books/{id}/reviews/{id_review}")
      * @SWG\Tag(name="books")
+     * @Security(name="Bearer")
      * */
     public function putReviewAction($id, $review_id, Request $request)
     {

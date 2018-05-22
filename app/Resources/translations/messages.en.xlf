@@ -153,6 +153,10 @@
                    <source>text.no_authors</source>
                    <target>No authors were found</target>
              </trans-unit>
+             <trans-unit id="label_application_name">
+                   <source>label.application_name</source>
+                   <target>Application Name</target>
+             </trans-unit>
         </body>
     </file>
 </xliff>

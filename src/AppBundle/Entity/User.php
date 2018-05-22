@@ -41,6 +41,14 @@ class User extends BaseUser
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Api\Client", mappedBy="user")
+     * @Exclude
+     */
+    private $clients;
+
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
      * @ORM\ManyToMany(targetEntity="Book", inversedBy="lovedBy")
      * @ORM\JoinTable(name="wishlist")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
@@ -164,5 +172,41 @@ class User extends BaseUser
     public function getWishlist()
     {
         return $this->wishlist;
+    }
+
+    /**
+     * Add client.
+     *
+     * @param \AppBundle\Entity\Api\Client $client
+     *
+     * @return User
+     */
+    public function addClient(\AppBundle\Entity\Api\Client $client)
+    {
+        $this->clients[] = $client;
+
+        return $this;
+    }
+
+    /**
+     * Remove client.
+     *
+     * @param \AppBundle\Entity\Api\Client $client
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeClient(\AppBundle\Entity\Api\Client $client)
+    {
+        return $this->clients->removeElement($client);
+    }
+
+    /**
+     * Get clients.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getClients()
+    {
+        return $this->clients;
     }
 }

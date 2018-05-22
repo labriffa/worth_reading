@@ -90,12 +90,27 @@ services:
         class: AppBundle\Service\PaginationService
         arguments: ['@knp_paginator', '@request_stack']
 
+    # author service
     AppBundle\Service\AuthorService:
           class: AppBundle\Service\AuthorService
           arguments: ['@AppBundle\Repository\AuthorRepository',
                       '@doctrine.orm.entity_manager',
                       '@AppBundle\Service\PaginationService']
 
+    # api google books service
+    AppBundle\Service\Api\GoogleBooksService:
+          class: AppBundle\Service\Api\GoogleBooksService
+          arguments: []
+
+    # api goodreads service
+    AppBundle\Service\Api\GoodReadsService:
+          class: AppBundle\Service\Api\GoodReadsService
+          arguments: []
+
+    # api library thing service
+    AppBundle\Service\Api\LibraryThingService:
+          class: AppBundle\Service\Api\LibraryThingService
+          arguments: []
 
     # Event Listeners
 

@@ -26,6 +26,10 @@ worth_reading_admin:
   resource: 'config/routing/admin_routing.yml'
   prefix: /admin
 
+worth_reading_developer:
+  resource: 'config/routing/developer_routing.yml'
+  prefix: /developer
+
 worth_reading_user:
   resource: 'config/routing/user_routing.yml'
 

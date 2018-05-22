@@ -9,6 +9,9 @@ use AppBundle\Entity\Review;
 use AppBundle\Form\BookType;
 
 use AppBundle\Form\ReviewType;
+use AppBundle\Service\Api\GoodReadsService;
+use AppBundle\Service\Api\GoogleBooksService;
+use AppBundle\Service\Api\LibraryThingService;
 use AppBundle\Service\AuthorService;
 use AppBundle\Service\BookService;
 use AppBundle\Service\ReviewService;
@@ -130,12 +133,12 @@ class BookController extends BaseController
      * @param ReviewService $reviewService
      * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function showAction(Request $request, Book $book, ReviewService $reviewService)
+    public function showAction(Request $request, Book $book, ReviewService $reviewService,
+                               GoogleBooksService $googleBooksService, GoodReadsService $goodReadsService,
+                               LibraryThingService $libraryThingService)
     {
         // get user
         $user = $this->getUser();
-
-        $good_reads_reviews = "";
 
         $good_reads_book_other_editions = [];
 
@@ -143,65 +146,27 @@ class BookController extends BaseController
 
         $review_form = $this->createForm(ReviewType::class, $review);
 
+
         // retrieve extra information from Google Books API
-
-        // create guzzle client
-        $client = new Client(['base_uri' => 'https://foo.com/api/']);
-
-        // fetch response from google books api with this isbn
-        $response = $client->get('https://www.googleapis.com/books/v1/volumes',
-            [
-                'query' =>
-                [
-                    'q' => 'isbn:' . $book->getIsbn()
-                ]
-            ]
-        );
-
-        $google_book = json_decode($response->getBody(), true);
+        $google_book = $googleBooksService->searchISBN($book->getIsbn());
 
         // get goodreads review widget
+        $good_reads_reviews = $goodReadsService->getReviews($book->getIsbn());
 
-        $client = new Client();
-        $res = $client->get('https://www.goodreads.com/book/isbn/'.$book->getIsbn().'?key=Y2L2h66TxHsrUF3sAH71dA&format=xml', ['http_errors' => false]);
 
-        $xmlstring = $res->getBody();
+        // get library thing other edition isbn's
+        $array = $libraryThingService->getOtherEditions($book->getIsbn());
 
-        $xml = simplexml_load_string($xmlstring, "SimpleXMLElement", LIBXML_NOCDATA);
-        $json = json_encode($xml);
-        $array = json_decode($json,TRUE);
 
-        if(isset($array['book']['reviews_widget'])) {
-            $good_reads_reviews = $array['book']['reviews_widget'];
-        }
-
-        // get library thing
-        $client = new Client();
-        $res = $client->get('http://www.librarything.com/api/thingISBN/'.$book->getIsbn());
-
-        $xmlstring = $res->getBody();
-
-        $xml = simplexml_load_string($xmlstring, "SimpleXMLElement", LIBXML_NOCDATA);
-        $json = json_encode($xml);
-        $array = json_decode($json,TRUE);
-
+        // get other edition information
         if(isset($array['isbn'])) {
             $books = $array['isbn'];
 
             $libray_thing_other_editions = array_slice($books, 0, 5);
 
             foreach ($libray_thing_other_editions as $edition) {
-                $res = $client->get('https://www.goodreads.com/search/index.xml'.'?key=Y2L2h66TxHsrUF3sAH71dA&format=xml&q='.$edition);
 
-                $xmlstring = $res->getBody();
-
-                $xml = simplexml_load_string($xmlstring, "SimpleXMLElement", LIBXML_NOCDATA);
-                $json = json_encode($xml);
-                $array = json_decode($json,TRUE);
-
-                dump($array);
-
-
+                $array = $goodReadsService->search($edition);
 
                 if(isset($array["search"]["results"]["work"])) {
                     array_push($good_reads_book_other_editions, $array["search"]["results"]["work"]);

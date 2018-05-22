@@ -145,6 +145,7 @@ class GenreApiController extends BaseApiController {
      *  )
      *
      * @SWG\Tag(name="genres")
+     * @Security(name="Bearer")
      *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -221,6 +222,7 @@ class GenreApiController extends BaseApiController {
      * )
      *
      * @SWG\Tag(name="genres")
+     * @Security(name="Bearer")
      *
      * @param Integer integer
      * @param Request $request
@@ -264,16 +266,6 @@ class GenreApiController extends BaseApiController {
         }
     }
 
-    public function updateGenresAction() {
-        return $this->createApiResponse("Can't update entire resource", Response::HTTP_METHOD_NOT_ALLOWED);
-
-    }
-
-    public function deleteGenresAction() {
-        return $this->createApiResponse("Can't delete entire resource", Response::HTTP_METHOD_NOT_ALLOWED);
-
-    }
-
     /**
      * Remove a genre
      *
@@ -305,6 +297,7 @@ class GenreApiController extends BaseApiController {
      * )
      *
      * @SWG\Tag(name="genres")
+     * @Security(name="Bearer")
      *
      * @param Integer $id
      * @return \Symfony\Component\HttpFoundation\Response
